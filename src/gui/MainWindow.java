@@ -2,16 +2,19 @@ package gui;
 
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import static projeszk22.Consts.*;
+import szd.SzdMain;
 
-public class MainWindow extends JFrame{
+public class MainWindow extends JFrame implements ActionListener{
 
-    private JButton exitBtn, htBtn, kgBtn, pdBtn, szdBtn;
+    private JButton exitBtn, htBtn, ibBtn, kgBtn, pdBtn, szdBtn;
     
     public MainWindow() {
         setupFrame();
@@ -26,9 +29,10 @@ public class MainWindow extends JFrame{
     
     private void setupLayout(){
         htBtn = new CButton(MW_BTN_1);
-        kgBtn = new CButton(MW_BTN_2);
-        pdBtn = new CButton(MW_BTN_3);
-        szdBtn = new CButton(MW_BTN_4);
+        ibBtn = new CButton(MW_BTN_2);
+        kgBtn = new CButton(MW_BTN_3);
+        pdBtn = new CButton(MW_BTN_4);
+        szdBtn = new CButton(MW_BTN_5);
         exitBtn = new CButton(MW_BTN_EXIT);
         
         JPanel buttons = new JPanel();
@@ -36,6 +40,8 @@ public class MainWindow extends JFrame{
         
         buttons.add(Box.createRigidArea(new Dimension(0, 20)));
         buttons.add(htBtn);
+        buttons.add(Box.createRigidArea(new Dimension(0, 10)));
+        buttons.add(ibBtn);
         buttons.add(Box.createRigidArea(new Dimension(0, 10)));
         buttons.add(kgBtn);
         buttons.add(Box.createRigidArea(new Dimension(0, 10)));
@@ -51,7 +57,33 @@ public class MainWindow extends JFrame{
     }
     
     private void setupListeners(){
-        
+        htBtn.addActionListener(this);
+        ibBtn.addActionListener(this);
+        kgBtn.addActionListener(this);
+        pdBtn.addActionListener(this);
+        szdBtn.addActionListener(this);
+        exitBtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                System.exit(0);
+            }
+        });
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        Object src = e.getSource();
+        if( src.equals(htBtn) ){
+            System.out.println("HT");
+        }else if( src.equals(ibBtn) ){
+            System.out.println("IB");
+        }else if( src.equals(kgBtn) ){
+            System.out.println("KG");
+        }else if( src.equals(pdBtn) ){
+            System.out.println("PD");
+        }else if( src.equals(szdBtn) ){
+            new SzdMain().setVisible(true);
+        }
     }
     
     private class CButton extends JButton{
