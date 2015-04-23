@@ -9,6 +9,7 @@ import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import pd.PDFrame;
 import static projeszk22.Consts.*;
 import szd.SzdMain;
 
@@ -80,7 +81,7 @@ public class MainWindow extends JFrame implements ActionListener{
         }else if( src.equals(kgBtn) ){
             System.out.println("KG");
         }else if( src.equals(pdBtn) ){
-            System.out.println("PD");
+            new PDFrame().setVisible(true);
         }else if( src.equals(szdBtn) ){
             new SzdMain().setVisible(true);
         }
