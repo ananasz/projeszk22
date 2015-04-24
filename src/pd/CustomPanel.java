@@ -22,10 +22,11 @@ public class CustomPanel extends JPanel {
 
         for (Entity e : entities) {
             if (e.getRot() != 0) {
-                at.setToRotation(Math.toDegrees(e.getRot()));
+                at.setToRotation(Math.toRadians(e.getRot()), e.getCenterX(), e.getCenterY());
                 g2D.setTransform(at);
                 g2D.drawImage(e.getImage(), (int) e.getX(), (int) e.getY(), null);
                 at.setToRotation(0.0d);
+                g2D.setTransform(at);
             } else {
                 g2D.drawImage(e.getImage(), (int) e.getX(), (int) e.getY(), null);
             }

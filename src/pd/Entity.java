@@ -18,6 +18,21 @@ public class Entity {
         this.y = y;
         this.rot = rot;
     }
+    
+    public Entity(ImageIcon image) {
+        this.image = image;
+        this.x = 0.0d;
+        this.y = 0.0d;
+        this.rot = 0.0d;
+    }
+    
+    public double getCenterX() {
+        return x + (image.getIconWidth() / 2);
+    }
+    
+    public double getCenterY() {
+        return y + (image.getIconHeight() / 2);
+    }
 
     public Image getImage() {
         return image.getImage();
