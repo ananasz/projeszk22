@@ -17,20 +17,22 @@ public class PDFrame extends JFrame {
         setTitle("TankHunt - PD");
         setSize(1024, 768);
         setLocation(100, 100);
+        setResizable(false);
 
         panel = new CustomPanel();
         panel.setLayout(null);
         add(panel);
         logic = new GameLogic(this);
         addMouseMotionListener(logic);
+        addMouseListener(logic);
 
         addEntities();
     }
 
     private void addEntities() {
-        Entity terrain = new Entity(new ImageIcon(getClass().getResource("Terrain.jpg")));
-        Entity tigerHull = new Entity(new ImageIcon(getClass().getResource("Tiger_hull.png")), 525, 450, 0);
-        Entity tigerTurret = new Entity(new ImageIcon(getClass().getResource("Tiger_turret.png")), tigerHull.getX(), tigerHull.getY(), 0);
+        Entity terrain = new Entity("Terrain", new ImageIcon(getClass().getResource("textures\\Terrain.jpg")));
+        Entity tigerHull = new Entity("TigerHull", new ImageIcon(getClass().getResource("textures\\Tiger_hull.png")), 525, 450, 0);
+        Entity tigerTurret = new Entity("TigerTurret", new ImageIcon(getClass().getResource("textures\\Tiger_turret.png")), tigerHull.getX(), tigerHull.getY(), 0);
 
         panel.getEntities().add(terrain);
         panel.getEntities().add(tigerHull);

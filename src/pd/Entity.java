@@ -9,21 +9,31 @@ import javax.swing.ImageIcon;
  */
 public class Entity {
 
+    private String name;
     private ImageIcon image;
     private double x, y, rot;
+    private boolean alive = true;
+    private int removeCooldown = 100;
 
-    public Entity(ImageIcon image, double x, double y, double rot) {
+    public Entity(String name, ImageIcon image, double x, double y, double rot) {
+        this.name = name;
         this.image = image;
         this.x = x;
         this.y = y;
         this.rot = rot;
     }
     
-    public Entity(ImageIcon image) {
-        this.image = image;
-        this.x = 0.0d;
-        this.y = 0.0d;
-        this.rot = 0.0d;
+    public Entity(String name, ImageIcon image) {
+        this(name, image, 0.0d, 0.0d, 0.0d);
+    }
+    
+    public void decreaseRemoveCooldown() {
+        if(removeCooldown > -1) {
+            removeCooldown--;
+        }
+        if(removeCooldown == 0) {
+            image = new ImageIcon(getClass().getResource("textures\\Blank.png"));
+        }
     }
     
     public double getCenterX() {
@@ -34,8 +44,12 @@ public class Entity {
         return y + (image.getIconHeight() / 2);
     }
 
-    public Image getImage() {
-        return image.getImage();
+    public String getName() {
+        return name;
+    }
+
+    public ImageIcon getImageIcon() {
+        return image;
     }
 
     public double getX() {
@@ -48,6 +62,10 @@ public class Entity {
 
     public double getRot() {
         return rot;
+    }
+
+    public boolean isAlive() {
+        return alive;
     }
 
     public void setImage(ImageIcon image) {
@@ -64,5 +82,9 @@ public class Entity {
 
     public void setRot(double rot) {
         this.rot = rot;
+    }
+
+    public void destroyed() {
+        alive = false;
     }
 }
