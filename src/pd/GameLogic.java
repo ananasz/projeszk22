@@ -89,12 +89,12 @@ public class GameLogic implements MouseMotionListener, MouseListener {
         for(Entity e: enemies) {
             if(isOnTarget(e) && e.isAlive()) {
                 e.setImage(
-                        new ImageIcon(getClass().getResource("textures\\T-34_destroyed.png")));
+                        new ImageIcon(getClass().getResource("textures\\T_34_destroyed.png")));
                 e.destroyed();
                 
                 int i = frame.getPanel().getEntities().indexOf(e);
                 frame.getPanel().getEntities().get(i).setImage(
-                        new ImageIcon(getClass().getResource("textures\\T-34_destroyed.png")));
+                        new ImageIcon(getClass().getResource("textures\\T_34_destroyed.png")));
                 frame.getPanel().getEntities().get(i).destroyed();
             }
         }
@@ -103,7 +103,7 @@ public class GameLogic implements MouseMotionListener, MouseListener {
     public void addEnemy() {
         Entity newEnemy = new Entity(
                             "T-34", 
-                            new ImageIcon(getClass().getResource("textures\\T-34.png")),
+                            new ImageIcon(getClass().getResource("textures\\T_34.png")),
                             rndGen.nextInt(frame.getWidth() - 200),
                             -200,
                             0.0d);

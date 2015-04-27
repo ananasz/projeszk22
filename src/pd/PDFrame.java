@@ -22,11 +22,10 @@ public class PDFrame extends JFrame {
         panel = new CustomPanel();
         panel.setLayout(null);
         add(panel);
+        addEntities();
         logic = new GameLogic(this);
         addMouseMotionListener(logic);
         addMouseListener(logic);
-
-        addEntities();
     }
 
     private void addEntities() {
