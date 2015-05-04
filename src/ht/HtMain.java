@@ -16,8 +16,7 @@ public class HtMain extends JFrame {
     
     private void setupFrame(){
         this.setTitle("Pac-Man");
-        this.setDefaultCloseOperation(EXIT_ON_CLOSE);
-        this.setSize(new Dimension(640, 480));
+        this.setSize(new Dimension(800, 600));
         this.setLocation(this.getSize().width/2,this.getSize().height/2);
     }
     
