@@ -11,6 +11,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import static projeszk22.Consts.*;
 import szd.SzdMain;
+import ht.HtMain;
 
 public class MainWindow extends JFrame implements ActionListener{
 
@@ -74,7 +75,7 @@ public class MainWindow extends JFrame implements ActionListener{
     public void actionPerformed(ActionEvent e) {
         Object src = e.getSource();
         if( src.equals(htBtn) ){
-            System.out.println("HT");
+            new HtMain().setVisible(true);
         }else if( src.equals(ibBtn) ){
             System.out.println("IB");
         }else if( src.equals(kgBtn) ){
