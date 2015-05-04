@@ -14,5 +14,9 @@ public class Consts {
     public static final String MW_BTN_EXIT = "Kilépés";
     
     //SZD
-    public static final String SZD_TITLE = "Valami";
+    public static final int SZD_DEF_WIDTH = 600;
+    public static final int SZD_DEF_HEIGHT = 500;
+    public static final String SZD_TITLE = "Algo2 Networking";
+    public static final String SZD_MENU_FILE = "Fájl";
+    public static final String SZD_MENU_OPEN = "Gráf betöltése";
 }
