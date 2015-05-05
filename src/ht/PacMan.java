@@ -13,17 +13,20 @@ import java.awt.Image;
  */
 
 public class PacMan implements Movable{
-    int x,y;
-    boolean dead;
-    Image img;
-    Direction dir;
+    private int x,y;
+    private boolean dead;
+    private Direction dir;
+    
+    private Image img_up;
+    private Image img_down;
+    private Image img_left;
+    private Image img_right;
     
     public PacMan(){
-        this.x = 6;
+        this.x = 1;
         this.y = 1;
         this.dead = false;
-        this.dir = Direction.LEFT;
-        //this.img = new Image("classic-pacman-11.gif");
+        this.dir = Direction.RIGHT;
     }
     
     @Override
@@ -38,14 +41,23 @@ public class PacMan implements Movable{
     }
 
     @Override
-    public int[] getPos() {
-        int pos[] = {this.x,this.y};
-        return pos;
+    public int getPosX() {
+        return this.x;
+    }
+    
+    @Override
+    public int getPosY() {
+        return this.y;
     }
 
     @Override
     public Direction getDir() {
         return this.dir;
+    }
+
+    @Override
+    public void changeDir(Direction dir) {
+        this.dir = dir;
     }
     
 }

@@ -76,6 +76,7 @@ public class MainWindow extends JFrame implements ActionListener{
         Object src = e.getSource();
         if( src.equals(htBtn) ){
             new HtMain().setVisible(true);
+            //System.out.println("HT");
         }else if( src.equals(ibBtn) ){
             System.out.println("IB");
         }else if( src.equals(kgBtn) ){
