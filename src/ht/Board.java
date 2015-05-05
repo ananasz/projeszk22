@@ -8,6 +8,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.util.ArrayList;
 import javax.swing.JPanel;
 import javax.swing.Timer;
 
@@ -15,20 +16,27 @@ import javax.swing.Timer;
  *
  * @author Herendi Tibor
  */
+class Pos {
+
+    public int x, y;
+}
+
 public class Board extends JPanel {
 
     private PacMan pacman;
+    private ArrayList<Movable> ghosts;
+    
     private Dimension d;
     Timer timer;
     int delay;
-    int boardRowNumb;
-    int boardColNumb;
-    int blockWidth;
-    int blockHeight;
-    int speed;
+    
+    int boardRowNumb,boardColNumb;
+    int blockWidth,blockHeight;
+    int speed,maxspeed,minspeed;
 
-    int collectedPoints;
-    int boardPoints;
+    int collectedPoints,boardPoints;
+
+    ArrayList<Pos> blocks,coins;
 
     ActionListener timerListener = new ActionListener() {
 
@@ -49,6 +57,7 @@ public class Board extends JPanel {
 
         @Override
         public void keyPressed(KeyEvent e) {
+            //System.out.println(e.getKeyCode());
             switch (e.getKeyCode()) {
                 case 38:
                     pacman.changeDir(Direction.UP);
@@ -61,6 +70,12 @@ public class Board extends JPanel {
                     break;
                 case 39:
                     pacman.changeDir(Direction.RIGHT);
+                    break;
+                case 107:
+                    setSpeed(1);
+                    break;
+                case 109:
+                    setSpeed(-1);
                     break;
             }
         }
@@ -87,16 +102,18 @@ public class Board extends JPanel {
     }
 
     private void setupVariables() {
-        this.pacman = new PacMan(this.blockWidth/2, this.blockHeight/2);
+        this.pacman = new PacMan(this.blockWidth / 2, this.blockHeight / 2);
         this.boardRowNumb = (this.boardColNumb = 12);
         this.speed = 1;
         this.collectedPoints = 0;
         this.boardPoints = 30;
+        this.maxspeed = 4;
+        this.minspeed = 1;
     }
 
     private void setupListeners() {
         //Time Listener
-        this.delay = 1;
+        this.delay = 10;
         this.timer = new Timer(delay, timerListener);
         this.timer.start();
         //direction Listener
@@ -125,11 +142,11 @@ public class Board extends JPanel {
                     this.pacman.move(0, (0 + 1) * speed);
                 }
                 break;
-        } 
+        }
     }
 
     private void drawPacman(Graphics2D g) {
-        g.drawImage(this.pacman.getImage(),pacman.getPosX(), pacman.getPosY(),this);
+        g.drawImage(this.pacman.getImage(), pacman.getPosX(), pacman.getPosY(), this);
     }
 
     private void drawStatus(Graphics2D g2d) {
@@ -155,13 +172,17 @@ public class Board extends JPanel {
 
         g2d.setColor(Color.black);
         g2d.fillRect(0, 0, this.d.width, this.d.height);
-        
+
         //labirintus kövek rajzolása
         //gyüjthető pontok rajzolása
     }
 
     private boolean checkCollide() {
         return true;
+    }
+    
+    private void setSpeed(int m){
+        if(!(this.speed + m > this.maxspeed || this.speed + m < this.minspeed)) this.speed+=m;
     }
 
     @Override
