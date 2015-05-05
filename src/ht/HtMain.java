@@ -11,7 +11,7 @@ import javax.swing.JFrame;
 public class HtMain extends JFrame {
     public HtMain(){
         setupFrame();
-        setupPanel();
+        setupBoardPanel();
     }
     
     private void setupFrame(){
@@ -22,7 +22,7 @@ public class HtMain extends JFrame {
         this.setLocation(this.getSize().width/2,this.getSize().height/2);
     }
     
-    private void setupPanel(){
+    private void setupBoardPanel(){
         Board b = new Board();
         this.add(b);
         this.pack();

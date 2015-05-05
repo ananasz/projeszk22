@@ -23,7 +23,12 @@ public class Board extends JPanel {
     int delay;
     int boardRowNumb;
     int boardColNumb;
+    int blockWidth;
+    int blockHeight;
     int speed;
+
+    int collectedPoints;
+    int boardPoints;
 
     ActionListener timerListener = new ActionListener() {
 
@@ -82,9 +87,11 @@ public class Board extends JPanel {
     }
 
     private void setupVariables() {
-        this.pacman = new PacMan();
+        this.pacman = new PacMan(this.blockWidth/2, this.blockHeight/2);
         this.boardRowNumb = (this.boardColNumb = 12);
         this.speed = 1;
+        this.collectedPoints = 0;
+        this.boardPoints = 30;
     }
 
     private void setupListeners() {
@@ -99,23 +106,62 @@ public class Board extends JPanel {
     private void movePacMan() {
         switch (this.pacman.getDir()) {
             case LEFT:
-                this.pacman.move((0 - 1)*speed,0);
+                if (checkCollide()) {
+                    this.pacman.move((0 - 1) * speed, 0);
+                }
                 break;
             case RIGHT:
-                this.pacman.move((0 + 1)*speed, 0);
+                if (checkCollide()) {
+                    this.pacman.move((0 + 1) * speed, 0);
+                }
                 break;
             case UP:
-                this.pacman.move(0, (0 - 1)*speed);
+                if (checkCollide()) {
+                    this.pacman.move(0, (0 - 1) * speed);
+                }
                 break;
             case DOWN:
-                this.pacman.move(0, (0 + 1)*speed);
+                if (checkCollide()) {
+                    this.pacman.move(0, (0 + 1) * speed);
+                }
                 break;
-        }
+        } 
     }
 
     private void drawPacman(Graphics2D g) {
-        g.setColor(Color.yellow);
-        g.fillOval(pacman.getPosX(), pacman.getPosY(), d.width / 10, d.height / 10);
+        g.drawImage(this.pacman.getImage(),pacman.getPosX(), pacman.getPosY(),this);
+    }
+
+    private void drawStatus(Graphics2D g2d) {
+        g2d.setColor(Color.RED);
+        g2d.drawString("COLLECTED POINTS: " + this.collectedPoints, 10, 10);
+        g2d.drawString("SPEED: " + this.speed, 10, 20);
+    }
+
+    private void drawMaze(Graphics2D g2d) {
+        //páya feltöltése fekete színnel
+        g2d.setColor(Color.black);
+        g2d.fillRect(0, 0, this.d.width, this.d.height);
+
+        //pálya szélének rajzolása
+        g2d.setColor(Color.white);
+        g2d.fillRect(this.blockWidth, this.blockHeight, this.d.width, this.blockHeight);
+
+        g2d.setColor(Color.black);
+        g2d.fillRect(0, 0, this.d.width, this.d.height);
+
+        g2d.setColor(Color.black);
+        g2d.fillRect(0, 0, this.d.width, this.d.height);
+
+        g2d.setColor(Color.black);
+        g2d.fillRect(0, 0, this.d.width, this.d.height);
+        
+        //labirintus kövek rajzolása
+        //gyüjthető pontok rajzolása
+    }
+
+    private boolean checkCollide() {
+        return true;
     }
 
     @Override
@@ -127,11 +173,11 @@ public class Board extends JPanel {
 
     private void drawBoard(Graphics g) {
         Graphics2D g2d = (Graphics2D) g;
-        g2d.setColor(Color.black);
-        g2d.fillRect(0, 0, this.d.width, this.d.height);
 
         movePacMan();
+        drawMaze(g2d);
         drawPacman(g2d);
+        drawStatus(g2d);
     }
 
 }
