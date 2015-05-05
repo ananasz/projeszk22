@@ -17,9 +17,10 @@ public class HtMain extends JFrame {
     private void setupFrame(){
         this.setLayout(new FlowLayout());
         this.setTitle("Pac-Man");
-        this.setSize(new Dimension(800, 600));
-        this.setPreferredSize(new Dimension(800, 600));
+        this.setSize(new Dimension(920, 920));
+        this.setPreferredSize(new Dimension(920, 920));
         this.setLocation(this.getSize().width/2,this.getSize().height/2);
+        this.setResizable(false);
     }
     
     private void setupBoardPanel(){

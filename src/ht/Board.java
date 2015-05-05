@@ -18,6 +18,10 @@ import javax.swing.Timer;
  */
 class Pos {
 
+    public Pos(int x, int y) {
+        this.x = x;
+        this.y = y;
+    }
     public int x, y;
 }
 
@@ -25,18 +29,19 @@ public class Board extends JPanel {
 
     private PacMan pacman;
     private ArrayList<Movable> ghosts;
-    
+
     private Dimension d;
     Timer timer;
     int delay;
-    
-    int boardRowNumb,boardColNumb;
-    int blockWidth,blockHeight;
-    int speed,maxspeed,minspeed;
 
-    int collectedPoints,boardPoints;
+    int boardRowNumb, boardColNumb;
+    int blockWidth, blockHeight, blockRad;
+    int speed, maxspeed, minspeed;
 
-    ArrayList<Pos> blocks,coins;
+    int collectedPoints, boardPoints;
+
+    ArrayList<Pos> blocks;
+    int[] coins;
 
     ActionListener timerListener = new ActionListener() {
 
@@ -89,7 +94,7 @@ public class Board extends JPanel {
     }
 
     private void setupPanel() {
-        d = new Dimension(800, 600);
+        d = new Dimension(870, 870);
         this.setSize(d);
         this.setPreferredSize(d);
         setFocusable(true);
@@ -102,13 +107,18 @@ public class Board extends JPanel {
     }
 
     private void setupVariables() {
-        this.pacman = new PacMan(this.blockWidth / 2, this.blockHeight / 2);
-        this.boardRowNumb = (this.boardColNumb = 12);
+        this.blockWidth = (this.blockHeight = 58);
+        this.blockRad = blockWidth / 2;
+        this.pacman = new PacMan(blockWidth, blockHeight);
+        this.boardRowNumb = (this.boardColNumb = 15);
         this.speed = 1;
         this.collectedPoints = 0;
         this.boardPoints = 30;
         this.maxspeed = 4;
         this.minspeed = 1;
+
+        blocks = new ArrayList<>();
+        fillMaze();
     }
 
     private void setupListeners() {
@@ -120,26 +130,35 @@ public class Board extends JPanel {
         this.addKeyListener(dirListener);
     }
 
+    private void fillMaze() {
+        for (int i = 0; i < 15*2; ++i) {
+            blocks.add(new Pos(0, blockWidth * i/2));
+            blocks.add(new Pos(blockWidth * i/2, 0));
+            blocks.add(new Pos(blockWidth * i/2, 15 * 58 - blockWidth));
+            blocks.add(new Pos(15 * 58 - blockWidth, blockWidth * i/2));
+        }
+    }
+
     private void movePacMan() {
         switch (this.pacman.getDir()) {
             case LEFT:
-                if (checkCollide()) {
-                    this.pacman.move((0 - 1) * speed, 0);
+                if (checkCollison(pacman.getPosX() + -1 * speed - blockRad, pacman.getPosY())) { // -1 * speed - blockRad, 0
+                    this.pacman.move(-1 * speed, 0);
                 }
                 break;
             case RIGHT:
-                if (checkCollide()) {
-                    this.pacman.move((0 + 1) * speed, 0);
+                if (checkCollison(pacman.getPosX() + 1 * speed + blockRad, pacman.getPosY())) {   // 1 * speed + blockRad, 0
+                    this.pacman.move(1 * speed, 0);
                 }
                 break;
             case UP:
-                if (checkCollide()) {
-                    this.pacman.move(0, (0 - 1) * speed);
+                if (checkCollison(pacman.getPosX(), pacman.getPosY() + -1 * speed - blockRad)) { // 0, -1 * speed - blockRad
+                    this.pacman.move(0, -1 * speed);
                 }
                 break;
             case DOWN:
-                if (checkCollide()) {
-                    this.pacman.move(0, (0 + 1) * speed);
+                if (checkCollison(pacman.getPosX(), pacman.getPosY() + 1 * speed + blockRad)) { //0, 1 * speed + blockRad
+                    this.pacman.move(0, 1 * speed);
                 }
                 break;
         }
@@ -157,32 +176,35 @@ public class Board extends JPanel {
 
     private void drawMaze(Graphics2D g2d) {
         //páya feltöltése fekete színnel
-        g2d.setColor(Color.black);
-        g2d.fillRect(0, 0, this.d.width, this.d.height);
-
-        //pálya szélének rajzolása
-        g2d.setColor(Color.white);
-        g2d.fillRect(this.blockWidth, this.blockHeight, this.d.width, this.blockHeight);
-
-        g2d.setColor(Color.black);
-        g2d.fillRect(0, 0, this.d.width, this.d.height);
-
-        g2d.setColor(Color.black);
-        g2d.fillRect(0, 0, this.d.width, this.d.height);
-
-        g2d.setColor(Color.black);
-        g2d.fillRect(0, 0, this.d.width, this.d.height);
-
-        //labirintus kövek rajzolása
-        //gyüjthető pontok rajzolása
+        for (Pos p : blocks) {
+            g2d.setColor(Color.green);
+            g2d.fillRect(p.x, p.y, this.blockHeight, this.blockWidth);
+        }
     }
 
-    private boolean checkCollide() {
+    private boolean checkCollison(int x, int y) {
+        //falakkal való ütküzésnek ellenörzése
+        //körlapon lévő P(px;py) pont esetén, ha (px-x0)^2+(py-y0)^2 < r2, akkor körlapon van
+        //minden blokkra leellenörzöm, hogy benne van e. ha igen, akkor nem mehet tovább, iránytól függően
+
+        for (Pos p : blocks) {
+            if ((p.x - x) * (p.x - x) + (p.y - y) * (p.y - y) < this.blockRad * this.blockRad) {
+                return false;
+            }
+        }
+        /*
+         if (pacman.getPosX() > (x - blockRad) && pacman.getPosX() < (x + blockRad)
+         && pacman.getPosY() > (y - blockRad) && pacman.getPosY() < (y + blockRad)) {
+         return false;
+         }
+         */
         return true;
     }
-    
-    private void setSpeed(int m){
-        if(!(this.speed + m > this.maxspeed || this.speed + m < this.minspeed)) this.speed+=m;
+
+    private void setSpeed(int m) {
+        if (!(this.speed + m > this.maxspeed || this.speed + m < this.minspeed)) {
+            this.speed += m;
+        }
     }
 
     @Override
