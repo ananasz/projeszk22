@@ -110,7 +110,7 @@ public class Board extends JPanel {
         this.blockWidth = (this.blockHeight = 58);
         this.blockRad = blockWidth / 2;
         this.pacman = new PacMan(blockWidth, blockHeight);
-        this.boardRowNumb = (this.boardColNumb = 15);
+        this.boardRowNumb = (this.boardColNumb = d.height / this.blockWidth);
         this.speed = 1;
         this.collectedPoints = 0;
         this.boardPoints = 30;
@@ -131,35 +131,103 @@ public class Board extends JPanel {
     }
 
     private void fillMaze() {
-        for (int i = 0; i < 15*2; ++i) {
-            blocks.add(new Pos(0, blockWidth * i/2));
-            blocks.add(new Pos(blockWidth * i/2, 0));
-            blocks.add(new Pos(blockWidth * i/2, 15 * 58 - blockWidth));
-            blocks.add(new Pos(15 * 58 - blockWidth, blockWidth * i/2));
+        for (int i = 0; i < boardRowNumb * 2; ++i) {
+            blocks.add(new Pos(0, blockWidth * i / 2));
+            blocks.add(new Pos(blockWidth * i / 2, 0));
+            blocks.add(new Pos(blockWidth * i / 2, boardRowNumb * blockWidth - blockWidth));
+            blocks.add(new Pos(boardRowNumb * blockWidth - blockWidth, blockWidth * i / 2));
+        }
+
+        for (int i = 4; i < boardRowNumb * 2 - 5; ++i) {
+            blocks.add(new Pos(blockWidth * 2, blockWidth * i / 2));
+            blocks.add(new Pos(blockWidth * 2 + blockWidth / 2, blockWidth * i / 2));
         }
     }
 
     private void movePacMan() {
         switch (this.pacman.getDir()) {
             case LEFT:
-                if (checkCollison(pacman.getPosX() + -1 * speed - blockRad, pacman.getPosY())) { // -1 * speed - blockRad, 0
-                    this.pacman.move(-1 * speed, 0);
+                for (int i = 0; i <= 1; i++) {
+                    if (!(checkCollison((pacman.getPosX() + -1 * speed - blockRad * i), pacman.getPosY()))) {
+                        return;
+                    }
                 }
+                /*if (!(checkCollison(pacman.getPosX(), pacman.getPosY()))) {
+                 return;
+                 }
+                 if (!(checkCollison(pacman.getPosX() - blockRad, pacman.getPosY()))) {
+                 return;
+                 }
+                 if (!(checkCollison(pacman.getPosX(), pacman.getPosY() + blockRad - 2))) {
+                 return;
+                 }
+                 if (!(checkCollison(pacman.getPosX(), pacman.getPosY() - blockRad + 2))) {
+                 return;
+                 }*/
+                this.pacman.move(-1 * speed, 0);
                 break;
+
             case RIGHT:
-                if (checkCollison(pacman.getPosX() + 1 * speed + blockRad, pacman.getPosY())) {   // 1 * speed + blockRad, 0
-                    this.pacman.move(1 * speed, 0);
+                for (int i = 0; i <= 1; i++) {
+                    if (!(checkCollison(pacman.getPosX() + 1 * speed + blockRad * i, pacman.getPosY()))) {
+                        return;
+                    }
                 }
+                /*if (!(checkCollison(pacman.getPosX(), pacman.getPosY()))) {
+                 return;
+                 }
+                 if (!(checkCollison(pacman.getPosX() + blockRad, pacman.getPosY()))) {
+                 return;
+                 }
+                 if (!(checkCollison(pacman.getPosX(), pacman.getPosY() + blockRad - 2))) {
+                 return;
+                 }
+                 if (!(checkCollison(pacman.getPosX(), pacman.getPosY() - blockRad + 2))) {
+                 return;
+                 }*/
+                this.pacman.move(1 * speed, 0);
                 break;
+
             case UP:
-                if (checkCollison(pacman.getPosX(), pacman.getPosY() + -1 * speed - blockRad)) { // 0, -1 * speed - blockRad
-                    this.pacman.move(0, -1 * speed);
+                for (int i = 0; i <= 1; i++) {
+                    if (!(checkCollison(pacman.getPosX(), pacman.getPosY() + -1 * speed - blockRad * i))) {
+                        return;
+                    }
                 }
+                /* if (!(checkCollison(pacman.getPosX(), pacman.getPosY()))) {
+                 return;
+                 }
+                 if (!(checkCollison(pacman.getPosX(), pacman.getPosY() + blockRad))) {
+                 return;
+                 }
+                 if (!(checkCollison(pacman.getPosX() + blockRad - 2, pacman.getPosY()))) {
+                 return;
+                 }
+                 if (!(checkCollison(pacman.getPosX() - blockRad + 2, pacman.getPosY()))) {
+                 return;
+                 }*/
+                this.pacman.move(0, -1 * speed);
                 break;
+
             case DOWN:
-                if (checkCollison(pacman.getPosX(), pacman.getPosY() + 1 * speed + blockRad)) { //0, 1 * speed + blockRad
-                    this.pacman.move(0, 1 * speed);
+                for (int i = 0; i <= 1; i++) {
+                    if (!(checkCollison(pacman.getPosX(), pacman.getPosY() + 1 * speed + blockRad * i))) {
+                        return;
+                    }
                 }
+                /*if (!(checkCollison(pacman.getPosX(), pacman.getPosY()))) {
+                 return;
+                 }
+                 if (!(checkCollison(pacman.getPosX(), pacman.getPosY() + blockRad))) {
+                 return;
+                 }
+                 if (!(checkCollison(pacman.getPosX() + blockRad - 2, pacman.getPosY()))) {
+                 return;
+                 }
+                 if (!(checkCollison(pacman.getPosX() - blockRad + 2, pacman.getPosY()))) {
+                 return;
+                 }*/
+                this.pacman.move(0, 1 * speed);
                 break;
         }
     }
@@ -186,18 +254,11 @@ public class Board extends JPanel {
         //falakkal való ütküzésnek ellenörzése
         //körlapon lévő P(px;py) pont esetén, ha (px-x0)^2+(py-y0)^2 < r2, akkor körlapon van
         //minden blokkra leellenörzöm, hogy benne van e. ha igen, akkor nem mehet tovább, iránytól függően
-
         for (Pos p : blocks) {
-            if ((p.x - x) * (p.x - x) + (p.y - y) * (p.y - y) < this.blockRad * this.blockRad) {
+            if ((p.x - x) * (p.x - x) + (p.y - y) * (p.y - y) < (this.blockRad) * (this.blockRad)) {
                 return false;
             }
         }
-        /*
-         if (pacman.getPosX() > (x - blockRad) && pacman.getPosX() < (x + blockRad)
-         && pacman.getPosY() > (y - blockRad) && pacman.getPosY() < (y + blockRad)) {
-         return false;
-         }
-         */
         return true;
     }
 
