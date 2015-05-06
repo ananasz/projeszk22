@@ -9,9 +9,9 @@ import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
-import pd.PDFrame;
 import static projeszk22.Consts.*;
 import szd.SzdMain;
+import ht.HtMain;
 
 public class MainWindow extends JFrame implements ActionListener{
 
@@ -75,13 +75,14 @@ public class MainWindow extends JFrame implements ActionListener{
     public void actionPerformed(ActionEvent e) {
         Object src = e.getSource();
         if( src.equals(htBtn) ){
-            System.out.println("HT");
+            new HtMain().setVisible(true);
+            //System.out.println("HT");
         }else if( src.equals(ibBtn) ){
             System.out.println("IB");
         }else if( src.equals(kgBtn) ){
             System.out.println("KG");
         }else if( src.equals(pdBtn) ){
-            new PDFrame().setVisible(true);
+            System.out.println("PD");
         }else if( src.equals(szdBtn) ){
             new SzdMain().setVisible(true);
         }

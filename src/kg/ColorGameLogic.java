@@ -57,6 +57,7 @@ public class ColorGameLogic {
     }
     
     /**
+<<<<<<< HEAD
      * A játék nyerési feltételét vizsgáló függvény
      * Ha minden cella egyszínű, a játékos nyert
      * @return 
@@ -74,6 +75,8 @@ public class ColorGameLogic {
     }
     
     /**
+=======
+>>>>>>> origin/master
      * Egy adott cella színét lekérdező funkció
      * @param i sorindex
      * @param j oszlopindex
