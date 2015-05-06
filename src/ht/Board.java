@@ -148,6 +148,7 @@ public class Board extends JPanel {
             blocks.add(new Pos(blockWidth * 2 + blockWidth / 2, blockWidth * i / 2));
         }
 
+        //coins
         int i = 0;
         while (i < boardCoins) {
             Pos p = new Pos((int) (new Random().nextInt(870)), (int) (new Random().nextInt(870)));
@@ -278,7 +279,7 @@ public class Board extends JPanel {
 
     private boolean blockCollison(int x, int y) {
         for (Pos p : blocks) {
-            if (!checkIsNotCollided(new Pos(x, y), p, this.blockRad)) {
+            if (!checkIsNotCollided(new Pos(x + this.blockRad, y + this.blockRad), new Pos(p.x + this.blockRad,p.y + this.blockRad), this.blockRad)) {
                 return false;
             }
         }
