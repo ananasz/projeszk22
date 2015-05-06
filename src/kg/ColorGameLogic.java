@@ -57,6 +57,26 @@ public class ColorGameLogic {
     }
     
     /**
+<<<<<<< HEAD
+     * A játék nyerési feltételét vizsgáló függvény
+     * Ha minden cella egyszínű, a játékos nyert
+     * @return 
+     */
+    public boolean isGameWon() {
+        int first = colors[0][0];
+        for (int i = 0; i < getHeight(); i++) {
+            for (int j = 0; j < getWidth(); j++) {
+                if (first != colors[i][j]) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+    
+    /**
+=======
+>>>>>>> origin/master
      * Egy adott cella színét lekérdező funkció
      * @param i sorindex
      * @param j oszlopindex
