@@ -56,13 +56,8 @@ public class PacMan implements Movable {
     }
 
     @Override
-    public int getPosX() {
-        return this.x;
-    }
-
-    @Override
-    public int getPosY() {
-        return this.y;
+    public Pos getPos() {
+        return new Pos(x,y);
     }
 
     @Override

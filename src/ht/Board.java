@@ -9,6 +9,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.ArrayList;
+import java.util.Random;
 import javax.swing.JPanel;
 import javax.swing.Timer;
 
@@ -31,17 +32,19 @@ public class Board extends JPanel {
     private ArrayList<Movable> ghosts;
 
     private Dimension d;
-    Timer timer;
-    int delay;
+    private Timer timer;
+    private int delay;
 
-    int boardRowNumb, boardColNumb;
-    int blockWidth, blockHeight, blockRad;
-    int speed, maxspeed, minspeed;
+    private int boardRowNumb, boardColNumb;
+    private int blockWidth, blockHeight, blockRad;
+    private int speed, maxspeed, minspeed;
 
-    int collectedPoints, boardPoints;
+    private int collectedCoins, boardCoins;
+
+    private long gameStartTime;
 
     ArrayList<Pos> blocks;
-    int[] coins;
+    ArrayList<Pos> coins;
 
     ActionListener timerListener = new ActionListener() {
 
@@ -112,12 +115,13 @@ public class Board extends JPanel {
         this.pacman = new PacMan(this.getWidth() / 2, this.getHeight() / 2);
         this.boardRowNumb = (this.boardColNumb = d.height / this.blockWidth);
         this.speed = 1;
-        this.collectedPoints = 0;
-        this.boardPoints = 30;
+        this.collectedCoins = 0;
+        this.boardCoins = 60;
         this.maxspeed = 4;
         this.minspeed = 1;
-
+        gameStartTime = System.currentTimeMillis();
         blocks = new ArrayList<>();
+        coins = new ArrayList<>();
         fillMaze();
     }
 
@@ -131,6 +135,7 @@ public class Board extends JPanel {
     }
 
     private void fillMaze() {
+        //blocks
         for (int i = 0; i < boardRowNumb * 2; ++i) {
             blocks.add(new Pos(0, blockWidth * i / 2));
             blocks.add(new Pos(blockWidth * i / 2, 0));
@@ -142,63 +147,75 @@ public class Board extends JPanel {
             blocks.add(new Pos(blockWidth * 2, blockWidth * i / 2));
             blocks.add(new Pos(blockWidth * 2 + blockWidth / 2, blockWidth * i / 2));
         }
+
+        int i = 0;
+        while (i < boardCoins) {
+            Pos p = new Pos((int) (new Random().nextInt(870)), (int) (new Random().nextInt(870)));
+            if ((blockCollison(p.x, p.y))
+                    && (blockCollison(p.x - blockRad, p.y))
+                    && (blockCollison(p.x + blockRad, p.y))
+                    && (blockCollison(p.x, p.y - blockRad))
+                    && (blockCollison(p.x, p.y + blockRad))) {
+                this.coins.add(p);
+                ++i;
+            }
+        }
+
     }
 
     private void movePacMan() {
+        coinCollison(this.pacman.getPos().x, this.pacman.getPos().y);
+        ghostCollison();
+        
         int diff = 5;
         switch (this.pacman.getDir()) {
             case LEFT:
-                if (!(checkCollison((pacman.getPosX() + -1 * speed - blockRad), pacman.getPosY()))) {
+                if (!(blockCollison((pacman.getPos().x + -1 * speed - blockRad), pacman.getPos().y))) {
                     return;
                 }
-                if (!(checkCollison((pacman.getPosX() + -1 * speed - blockRad), pacman.getPosY() + blockRad -diff))) {
+                if (!(blockCollison((pacman.getPos().x + -1 * speed - blockRad), pacman.getPos().y + blockRad - diff))) {
                     return;
                 }
-                if (!(checkCollison((pacman.getPosX() + -1 * speed - blockRad), pacman.getPosY() - blockRad + diff))) {
+                if (!(blockCollison((pacman.getPos().x + -1 * speed - blockRad), pacman.getPos().y - blockRad + diff))) {
                     return;
                 }
                 this.pacman.move(-1 * speed, 0);
                 break;
 
             case RIGHT:
-                if (!(checkCollison((pacman.getPosX() + 1 * speed + blockRad), pacman.getPosY()))) {
+                if (!(blockCollison((pacman.getPos().x + 1 * speed + blockRad), pacman.getPos().y))) {
                     return;
                 }
-                if (!(checkCollison((pacman.getPosX() + 1 * speed + blockRad), pacman.getPosY() + blockRad - diff))) {
+                if (!(blockCollison((pacman.getPos().x + 1 * speed + blockRad), pacman.getPos().y + blockRad - diff))) {
                     return;
                 }
-                if (!(checkCollison((pacman.getPosX() + 1 * speed + blockRad), pacman.getPosY() - blockRad + diff))) {
+                if (!(blockCollison((pacman.getPos().x + 1 * speed + blockRad), pacman.getPos().y - blockRad + diff))) {
                     return;
                 }
                 this.pacman.move(1 * speed, 0);
                 break;
 
             case UP:
-                if (!(checkCollison((pacman.getPosX()), pacman.getPosY() + -1 * speed - blockRad))) {
+                if (!(blockCollison((pacman.getPos()).x, pacman.getPos().y + -1 * speed - blockRad))) {
                     return;
                 }
-                if (!(checkCollison((pacman.getPosX() + blockRad - diff), pacman.getPosY() + -1 * speed - blockRad))) {
+                if (!(blockCollison((pacman.getPos().x + blockRad - diff), pacman.getPos().y + -1 * speed - blockRad))) {
                     return;
                 }
-                if (!(checkCollison((pacman.getPosX() - blockRad + diff), pacman.getPosY() + -1 * speed - blockRad))) {
+                if (!(blockCollison((pacman.getPos().x - blockRad + diff), pacman.getPos().y + -1 * speed - blockRad))) {
                     return;
                 }
                 this.pacman.move(0, -1 * speed);
                 break;
 
             case DOWN:
-                for (int i = 0; i <= 1; i++) {
-                    if (!(checkCollison(pacman.getPosX(), pacman.getPosY() + 1 * speed + blockRad * i))) {
-                        return;
-                    }
-                }
-                if (!(checkCollison((pacman.getPosX()), pacman.getPosY() + 1 * speed + blockRad))) {
+                if (!(blockCollison(pacman.getPos().x, pacman.getPos().y + 1 * speed + blockRad))) {
                     return;
                 }
-                if (!(checkCollison((pacman.getPosX() + blockRad - diff), pacman.getPosY() + 1 * speed + blockRad))) {
+                if (!(blockCollison((pacman.getPos().x + blockRad - diff), pacman.getPos().y + 1 * speed + blockRad))) {
                     return;
                 }
-                if (!(checkCollison((pacman.getPosX() - blockRad + diff), pacman.getPosY() + 1 * speed + blockRad))) {
+                if (!(blockCollison((pacman.getPos().x - blockRad + diff), pacman.getPos().y + 1 * speed + blockRad))) {
                     return;
                 }
                 this.pacman.move(0, 1 * speed);
@@ -207,13 +224,14 @@ public class Board extends JPanel {
     }
 
     private void drawPacman(Graphics2D g) {
-        g.drawImage(this.pacman.getImage(), pacman.getPosX(), pacman.getPosY(), this);
+        g.drawImage(this.pacman.getImage(), pacman.getPos().x, pacman.getPos().y, this);
     }
 
     private void drawStatus(Graphics2D g2d) {
         g2d.setColor(Color.RED);
-        g2d.drawString("COLLECTED POINTS: " + this.collectedPoints, 10, 10);
+        g2d.drawString("COLLECTED POINTS: " + this.collectedCoins, 10, 10);
         g2d.drawString("SPEED: " + this.speed, 10, 20);
+        g2d.drawString("ELAPSED TIME: " + (System.currentTimeMillis() - this.gameStartTime) / 1000, 10, 30);
     }
 
     private void drawMaze(Graphics2D g2d) {
@@ -222,17 +240,16 @@ public class Board extends JPanel {
             g2d.setColor(Color.green);
             g2d.fillRect(p.x, p.y, this.blockHeight, this.blockWidth);
         }
+        for (Pos p : coins) {
+            g2d.setColor(Color.yellow);
+            g2d.fillOval(p.x, p.y, 6, 6);
+        }
     }
 
-    private boolean checkCollison(int x, int y) {
-        //falakkal való ütküzésnek ellenörzése
-        //körlapon lévő P(px;py) pont esetén, ha (px-x0)^2+(py-y0)^2 < r2, akkor körlapon van
-        //minden blokkra leellenörzöm, hogy benne van e. ha igen, akkor nem mehet tovább, iránytól függően
+    private boolean checkIsNotCollided(Pos p, Pos q, int rad) {
 
-        for (Pos p : blocks) {
-            if ((p.x - x) * (p.x - x) + (p.y - y) * (p.y - y) < (this.blockRad) * (this.blockRad)) {
-                return false;
-            }
+        if ((p.x - q.x) * (p.x - q.x) + (p.y - q.y) * (p.y - q.y) < (rad) * (rad)) {
+            return false;
         }
 
         return true;
@@ -242,6 +259,30 @@ public class Board extends JPanel {
         if (!(this.speed + m > this.maxspeed || this.speed + m < this.minspeed)) {
             this.speed += m;
         }
+    }
+
+    private void coinCollison(int x, int y) {
+
+        for (Pos p : coins) {
+            if (!(checkIsNotCollided(p, new Pos(x + this.blockRad, y + this.blockRad), this.blockRad + 5))) {
+                coins.remove(p);
+                this.collectedCoins++;
+                break;
+            }
+        }
+    }
+
+    private void ghostCollison() {
+
+    }
+
+    private boolean blockCollison(int x, int y) {
+        for (Pos p : blocks) {
+            if (!checkIsNotCollided(new Pos(x, y), p, this.blockRad)) {
+                return false;
+            }
+        }
+        return true;
     }
 
     @Override

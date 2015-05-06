@@ -14,8 +14,7 @@ import java.awt.Image;
 public interface Movable {
     public void move(int x, int y);
     public void dead(boolean b);
-    public int getPosX();
-    public int getPosY();
+    public Pos getPos();
     public Direction getDir();
     public void changeDir(Direction dir);
     public Image getImage();
