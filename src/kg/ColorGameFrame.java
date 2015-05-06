@@ -12,10 +12,11 @@ import javax.swing.Action;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import static javax.swing.JFrame.EXIT_ON_CLOSE;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import kg.ColorGameLogic;
 
-class SwingColorGameFrame extends JFrame {
+public class ColorGameFrame extends JFrame {
 
     private ColorGameLogic cgl;
     private Action newGameAction = new AbstractAction() {
@@ -36,13 +37,14 @@ class SwingColorGameFrame extends JFrame {
             cgl.setCellColor(x, y);
             setButtonColors();
             if (cgl.isGameWon()) {
-                
+                JOptionPane.showMessageDialog(null, "Ön nyert!");
                 cgl.newGame();
+                setButtonColors();
             }
         }
     };
 
-    public SwingColorGameFrame(ColorGameLogic cgl) {
+    public ColorGameFrame(ColorGameLogic cgl) {
         this.cgl = cgl;
         setTitle("Színkirakósdi");
         setVisible(true);
