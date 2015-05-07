@@ -1,7 +1,6 @@
 package szd;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -32,7 +31,7 @@ public class MatrixReader {
     }
     
     public int get(int i, int j){
-        return ( i*(i-1) + 2*j )/2;
+        return matrix.get( ( i*(i-1) + 2*j )/2);
     }
     
     public int getSize(){

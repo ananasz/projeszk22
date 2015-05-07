@@ -1,5 +1,6 @@
 package szd;
 
+import java.awt.Graphics;
 import java.awt.event.ActionEvent;
 import java.io.FileNotFoundException;
 import javax.swing.AbstractAction;
@@ -16,6 +17,7 @@ public class SzdMain extends JFrame{
     
     final JFileChooser fc = new JFileChooser(System.getProperty("user.dir"));
     private MatrixReader matrix;
+    private DrawPanel drawPanel;
     
     private final Action openFile = new AbstractAction() {
 
@@ -25,6 +27,8 @@ public class SzdMain extends JFrame{
             if (ret == JFileChooser.APPROVE_OPTION) {
                 try {
                     matrix = new MatrixReader(fc.getSelectedFile());
+                    drawPanel.setMatrix(matrix);
+                    drawPanel.repaint();
                 } catch (FileNotFoundException ex) {
                     JOptionPane.showMessageDialog(null, "Hiba! A megadott fájl nem található");
                 } catch (MatrixException ex) {
@@ -37,6 +41,7 @@ public class SzdMain extends JFrame{
     public SzdMain(){
         setupFrame();
         setupMenu();
+        setupPanel();
     }
     
     private void setupFrame(){
@@ -59,5 +64,10 @@ public class SzdMain extends JFrame{
         menuBar.add(menu);
 
         setJMenuBar(menuBar);
+    }
+    
+    private void setupPanel(){
+        drawPanel = new DrawPanel();
+        getContentPane().add(drawPanel);
     }
 }
