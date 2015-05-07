@@ -23,7 +23,7 @@ public class PacMan implements Movable {
     private Image upImg;
     private Image leftImg;
     private Image rightImg;
-    
+
     public final int pacman_text_height = 58;
     public final int pacman_text_width = 58;
 
@@ -51,13 +51,13 @@ public class PacMan implements Movable {
     }
 
     @Override
-    public void dead(boolean b) {
+    public void setDead(boolean b) {
         this.dead = b;
     }
 
     @Override
     public Pos getPos() {
-        return new Pos(x,y);
+        return new Pos(x, y);
     }
 
     @Override
@@ -87,6 +87,11 @@ public class PacMan implements Movable {
     @Override
     public Image getImage() {
         return this.currImg;
+    }
+
+    @Override
+    public boolean isDead() {
+        return this.dead;
     }
 
 }

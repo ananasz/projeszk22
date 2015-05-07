@@ -8,7 +8,8 @@ import java.awt.Image;
  */
 public interface Movable {
     public void move(int x, int y);
-    public void dead(boolean b);
+    public void setDead(boolean b);
+    public boolean isDead();
     public Pos getPos();
     public Direction getDir();
     public void changeDir(Direction dir);

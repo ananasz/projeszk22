@@ -21,7 +21,7 @@ public class Ghost implements Movable {
     private Image rightImg;
     private Image currImg;
     private Image weakImg;
-    
+
     public final int ghost_text_height = 58;
     public final int ghost_text_width = 58;
 
@@ -48,13 +48,13 @@ public class Ghost implements Movable {
     }
 
     @Override
-    public void dead(boolean b) {
+    public void setDead(boolean b) {
         this.dead = b;
     }
 
     @Override
     public Pos getPos() {
-        return new Pos(x,y);
+        return new Pos(x, y);
     }
 
     @Override
@@ -78,6 +78,11 @@ public class Ghost implements Movable {
     @Override
     public Image getImage() {
         return this.currImg;
+    }
+
+    @Override
+    public boolean isDead() {
+        return this.dead;
     }
 
 }
