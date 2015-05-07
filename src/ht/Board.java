@@ -76,6 +76,7 @@ public class Board extends JPanel {
     private int collectedCoins, boardCoins;
     private long gameStartTime;
     private ArrayList<Pos> blocks, coins;
+    private boolean gameEnded;
 
     /**
      * timeListener egy névtelen osztályként valósít meg egy interfészt, amelyet
@@ -173,6 +174,7 @@ public class Board extends JPanel {
         blocks = new ArrayList<>();
         coins = new ArrayList<>();
         this.pacman = new PacMan(this.blockWidth, this.blockHeight);
+        this.gameEnded = false;
         fillMaze();
     }
 
@@ -455,6 +457,7 @@ public class Board extends JPanel {
         drawMaze(g2d);
         drawPacman(g2d);
         drawStatus(g2d);
+        checkCondition();
     }
 /**
  * 
@@ -462,6 +465,16 @@ public class Board extends JPanel {
  */
     public boolean isDead() {
         return this.pacman.isDead();
+    }
+    
+    public void checkCondition(){
+        if((this.collectedCoins >= boardCoins) || (pacman.isDead())){
+            this.gameEnded = true;
+        }
+    }
+    
+    public boolean isGameEnded(){
+        return this.gameEnded;
     }
 
 }

@@ -3,19 +3,11 @@ package ht;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
 import java.awt.GridLayout;
-import java.awt.Image;
-import java.awt.Insets;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
-import javax.swing.JPanel;
 
 /**
  *
@@ -44,7 +36,7 @@ public class HtMain extends JFrame {
             // 40 -> arrow_down
             // 38 -> arrow_up
             // 10 -> enter
-            System.out.println(e.getKeyCode());
+            //System.out.println(e.getKeyCode());
             switch (e.getKeyCode()) {
                 case 40:
                     p.incChosenMenu();
@@ -58,6 +50,7 @@ public class HtMain extends JFrame {
                     if (p.getChosenMenu() == 0) {
                         remove(p);
                         setupGamePanel();
+                        System.out.println("YOLO");
                     } else if (p.getChosenMenu() == 1) {
                         dispose();
                     }
@@ -75,8 +68,8 @@ public class HtMain extends JFrame {
         this.setLayout(new GridLayout(1, 1));
         this.setTitle("Pac-Man");
         this.setLocation(0, 0);
-        this.setSize(870, 870);
-        this.setPreferredSize(new Dimension(870, 870));
+        this.setSize(870, 890);
+        this.setPreferredSize(new Dimension(870, 890));
         this.setResizable(false);
     }
 

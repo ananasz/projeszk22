@@ -1,3 +1,8 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
 package ht;
 
 import java.awt.Color;
@@ -10,23 +15,26 @@ import javax.swing.JPanel;
  *
  * @author Herendi Tibor
  */
-public class MenuPanel extends JPanel {
+public class EndGamePanel extends JPanel {
 
     private int chosenMenu;
-    public MenuPanel(){
+    private boolean isDead;
+    
+    public EndGamePanel(boolean isDead){
         super();
         this.chosenMenu = 0;
+        this.isDead = isDead;
     }
 
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
 
-        g.drawImage(new ImageIcon(getClass().getResource("textures\\pacman_logo_done_yellowgreen.png")).getImage(), 0, 0, null);
+        //g.drawImage(new ImageIcon(getClass().getResource("textures\\pacman_logo_done_yellowgreen.png")).getImage(), 0, 0, null);
 
-        g.setFont(new Font("Serif", Font.BOLD, 20));
-        g.setColor(Color.white);
-        g.drawString("MENU:", this.getWidth() / 2, 200);
+        g.setFont(new Font("Serif", Font.BOLD, 60));
+        g.setColor(Color.red);
+        g.drawString("YOU DIED", this.getWidth() / 2 - 50, 50);
 
         g.setFont(new Font("Serif", Font.BOLD, 12));
         if (chosenMenu == 0) {
@@ -54,5 +62,4 @@ public class MenuPanel extends JPanel {
     public int getChosenMenu() {
         return this.chosenMenu;
     }
-
 }
