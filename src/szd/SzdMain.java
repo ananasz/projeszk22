@@ -1,10 +1,7 @@
 package szd;
 
 import java.awt.event.ActionEvent;
-import java.beans.PropertyChangeListener;
 import java.io.FileNotFoundException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.JFileChooser;

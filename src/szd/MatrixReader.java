@@ -31,7 +31,11 @@ public class MatrixReader {
         }
     }
     
-    public int get(int x, int y){
-        return 0;
+    public int get(int i, int j){
+        return ( i*(i-1) + 2*j )/2;
+    }
+    
+    public int getSize(){
+        return n;
     }
 }
