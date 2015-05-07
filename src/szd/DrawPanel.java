@@ -4,15 +4,21 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Point;
 import javax.swing.JPanel;
+import static projeszk22.Consts.*;
 
 public class DrawPanel extends JPanel{
 
-    private MatrixReader matrix;
+    private MatrixManager matrix, path;
     private int mSize;
-    private final String[] labels = {"A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P"};
-    public void setMatrix(MatrixReader m){
+    
+    public void setMatrix(MatrixManager m){
         matrix = m;
-        mSize = m.getSize();
+        mSize = matrix.getSize();
+        path = new MatrixManager(mSize);
+    }
+    
+    public void setPath(MatrixManager path){
+        this.path = path;
     }
     
     private Point getCoordinates(int i){
@@ -24,7 +30,7 @@ public class DrawPanel extends JPanel{
             return new Point(x, y);
     }
     
-    private Point getLabelPoint(Point p1, Point p2){
+    private Point getLabelCoordinates(Point p1, Point p2){
         int x = p1.x + Math.round( (p2.x - p1.x) * 0.4f);
         int y = p1.y + Math.round( (p2.y - p1.y) * 0.4f);
         return new Point(x, y);
@@ -39,22 +45,19 @@ public class DrawPanel extends JPanel{
             for(int j = 0; j < i; j++){ //élek kirajzolása
                 float weight = matrix.get(i, j);
                 if( weight != 0){
-                    if(weight < 0){
-                        g.setColor(Color.green);
-                        weight = -weight;
-                    }else{
-                        g.setColor(Color.black);
-                    }
+                    
+                    g.setColor( path.get(i, j) > 0 ? Color.green : Color.black);
+                    
                     Point jCoord = getCoordinates(j);
                     g.drawLine(iCoord.x, iCoord.y, jCoord.x, jCoord.y);
                     
                     //élsúlyok kirajzolása háttérrel
                     String label = ""+weight;
-                    Point weightLabelCoord = getLabelPoint(iCoord, jCoord);
-                    Color tmpColor = g.getColor();
+                    Point weightLabelCoord = getLabelCoordinates(iCoord, jCoord);
+                    Color lastColor = g.getColor();
                     g.setColor(Color.white);
                     g.fillRect(weightLabelCoord.x-label.length()*3, weightLabelCoord.y-10, label.length()*7, 12);
-                    g.setColor(tmpColor);
+                    g.setColor(lastColor);
                     g.drawString(label, weightLabelCoord.x-label.length()*3, weightLabelCoord.y);
                 }
             }
@@ -64,7 +67,7 @@ public class DrawPanel extends JPanel{
             g.setColor(Color.white);
             g.fillOval(c.x-10, c.y-10, 20,20);
             g.setColor(Color.black);
-            g.drawString(labels[i], c.x-5, c.y+5);
+            g.drawString(SZD_NODELABELS[i], c.x-5, c.y+5);
             g.drawOval(c.x-10, c.y-10, 20,20);
         }
         

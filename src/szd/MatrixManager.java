@@ -5,38 +5,44 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Locale;
 import java.util.Scanner;
+import static projeszk22.Consts.*;
 
 /*
 Ez az osztály a konstruktorban kapott elérési útvonalon lévő fájlból olvas be 
 egy sorfolytonosan, főátlóbeli elemek nélkül megadott alsó háromszög mátrixot.
 */
-public class MatrixReader {
+public class MatrixManager {
     
-    private ArrayList<Float> matrix = new ArrayList<>();
+    private final ArrayList<Float> matrix;
     private int n = 1; //n*n-es a teljes mátrix, ha nem adunk meg főátlót, 1től kell indítani
     
-    public MatrixReader(File file) throws FileNotFoundException, MatrixException{
+    public MatrixManager(File file) throws FileNotFoundException, MatrixException{
+        matrix = new ArrayList<>();
         Scanner sc = new Scanner(file);
         sc.useLocale(Locale.US); //float elválasztás . karakterrel (default , lenne)
         int i = 0; //n*n-es mátrix (főátló nélkül vett) alsó háromszögének elemszámát fogja számolni
         int k = 0; //beolvasott elemek száma
+        if( !sc.hasNextFloat() )
+            throw new MatrixException(SZD_ERR_NO_DATA);
         while(sc.hasNextFloat()){
             ++k;
             if(k>i) i += n++; //ha több elemet olvastunk be, mint i, akkor nagyobb a mátrix, 1 sort hozzáadunk, n-et növeljük
             float num = sc.nextFloat();
-            System.out.println("beolvasva: "+ num);
             if( num < 0 || num > 1)
-                throw new MatrixException("Az élsúlyok csak 0 és 1 közötti értékek lehetnek");
+                throw new MatrixException(SZD_ERR_INCORRECT_NUMBERS);
             matrix.add(num);
         }
         if(i != k){ //a beolvasott elemek száma nem egyezik meg az n*n-es mátrixhoz várttal.
-            throw new MatrixException("A megadott mátrix nem háromszög mátrix");
+            throw new MatrixException(SZD_ERR_NOT_TRIANGULAR);
         }
     }
 
-    public MatrixReader(MatrixReader copy) {
-        matrix = copy.getRawData();
-        n = copy.getSize();
+    public MatrixManager(int size) {
+        matrix = new ArrayList<>();
+        n = size;
+        for(int i = 0; i < n *(n-1)/2; i++){
+            matrix.add(0.0f);
+        }
     }
     
     public float get(int i, int j){
@@ -48,6 +54,8 @@ public class MatrixReader {
     }
     
     public void set(int i, int j, float value){
+        if(i == j)
+            return;
         if(i < j) //a felső háromszögben változtatunk, használjuk a szimmetriát
             matrix.set( ( j*(j-1) + 2*i )/2, value);
         else
@@ -61,13 +69,8 @@ public class MatrixReader {
         return ret;
     }
     
-    
     public int getSize(){
         return n;
-    }
-    
-    public ArrayList<Float> getRawData(){
-        return matrix;
     }
     
     public void print(){
@@ -78,10 +81,5 @@ public class MatrixReader {
             }
             System.out.println();
         }
-        System.out.println("Raw: ");
-        for(int i = 0; i < matrix.size(); i++){
-            System.out.print(matrix.get(i) + " ");
-        }
-        System.out.println();
     }
 }
