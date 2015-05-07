@@ -104,6 +104,8 @@ public class SzdMain extends JFrame implements ActionListener{
     private void setupButtons() {
         fromPanel.removeAll();
         toPanel.removeAll();
+        fromPanel.repaint();
+        toPanel.repaint();
         fromPanel.add(new JLabel(SZD_LABEL_FROM));
         toPanel.add(new JLabel(SZD_LABEL_TO));
         
