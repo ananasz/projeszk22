@@ -47,8 +47,6 @@ public class ColorGameFrame extends JFrame {
     public ColorGameFrame(ColorGameLogic cgl) {
         this.cgl = cgl;
         setTitle("Színkirakósdi");
-        setVisible(true);
-        setDefaultCloseOperation(EXIT_ON_CLOSE);
         setLocation(40, 400);
         setLayout(new BorderLayout());
         JButton newGameButton = new JButton(newGameAction);
