@@ -3,8 +3,16 @@ package ht;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.GridLayout;
+import java.awt.Image;
+import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -18,23 +26,43 @@ public class HtMain extends JFrame {
     JButton gameButton;
     JButton exitButton;
     JButton newGameButton;
-    JPanel p;
+    MenuPanel p;
     Board b;
 
-    ActionListener gameListener = new ActionListener() {
+    KeyListener menuListener = new KeyListener() {
 
         @Override
-        public void actionPerformed(ActionEvent e) {
-            remove(p);
-            setupGamePanel();
+        public void keyTyped(KeyEvent e) {
         }
-    };
-    ActionListener exitListener = new ActionListener() {
 
         @Override
-        public void actionPerformed(ActionEvent e) {
-            removeAll();
-            dispose();
+        public void keyReleased(KeyEvent e) {
+        }
+
+        @Override
+        public void keyPressed(KeyEvent e) {
+            // 40 -> arrow_down
+            // 38 -> arrow_up
+            // 10 -> enter
+            System.out.println(e.getKeyCode());
+            switch (e.getKeyCode()) {
+                case 40:
+                    p.incChosenMenu();
+                    p.repaint();
+                    break;
+                case 38:
+                    p.descChosenMenu();
+                    p.repaint();
+                    break;
+                case 10:
+                    if (p.getChosenMenu() == 0) {
+                        remove(p);
+                        setupGamePanel();
+                    } else if (p.getChosenMenu() == 1) {
+                        dispose();
+                    }
+                    break;
+            }
         }
     };
 
@@ -44,9 +72,9 @@ public class HtMain extends JFrame {
     }
 
     private void setupFrame() {
-        this.setLayout(new FlowLayout());
+        this.setLayout(new GridLayout(1, 1));
         this.setTitle("Pac-Man");
-        this.setLocation(0,0);
+        this.setLocation(0, 0);
         this.setSize(870, 870);
         this.setPreferredSize(new Dimension(870, 870));
         this.setResizable(false);
@@ -61,28 +89,13 @@ public class HtMain extends JFrame {
     }
 
     private void setupMenuFrame() {
-        p = new JPanel();
+        p = new MenuPanel();
+        p.setLayout(new FlowLayout());
         p.setSize(870, 870);
         p.setPreferredSize(new Dimension(870, 870));
         p.setBackground(Color.black);
-
-        gameButton = new JButton();
-        gameButton.setSize(600, 500);
-        gameButton.setLocation(600, 400);
-        gameButton.setText("GAEM");
-        gameButton.setBackground(Color.green);
-        gameButton.addActionListener(gameListener);
-        p.add(gameButton);
-
-        exitButton = new JButton();
-        exitButton = new JButton();
-        exitButton.setSize(600, 500);
-        exitButton.setLocation(600, 600);
-        exitButton.setText("EXIT");
-        exitButton.setBackground(Color.green);
-        exitButton.addActionListener(exitListener);
-        p.add(exitButton);
-
+        p.setFocusable(true);
+        p.addKeyListener(menuListener);
         this.add(p);
         this.pack();
     }
