@@ -2,7 +2,6 @@ package szd;
 
 import java.awt.Color;
 import java.awt.Graphics;
-import java.awt.Graphics2D;
 import java.awt.Point;
 import javax.swing.JPanel;
 
@@ -19,7 +18,7 @@ public class DrawPanel extends JPanel{
     private Point getCoordinates(int i){
             int x0 = getWidth()/2;
             int y0 = getHeight()/2;
-            int r = mSize*10+40;
+            int r = mSize*20+40;
             int x = (int) Math.round( x0 + r * Math.cos( i*360/mSize * Math.PI / 180) );
             int y = (int) Math.round( y0 + r * Math.sin( i*360/mSize * Math.PI / 180) );
             return new Point(x, y);
@@ -35,10 +34,10 @@ public class DrawPanel extends JPanel{
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
         
-        for(int j = 0; j < mSize; j++){
-            Point jCoord = getCoordinates(j);
-            for(int i = 0; i < j; i++){ //élek kirajzolása
-                int weight = matrix.get(i, j);
+        for(int i = 1; i < mSize; i++){
+            Point iCoord = getCoordinates(i);
+            for(int j = 0; j < i; j++){ //élek kirajzolása
+                float weight = matrix.get(i, j);
                 if( weight != 0){
                     if(weight < 0){
                         g.setColor(Color.green);
@@ -46,20 +45,21 @@ public class DrawPanel extends JPanel{
                     }else{
                         g.setColor(Color.black);
                     }
-                    Point iCoord = getCoordinates(i);
+                    Point jCoord = getCoordinates(j);
                     g.drawLine(iCoord.x, iCoord.y, jCoord.x, jCoord.y);
                     
                     //élsúlyok kirajzolása háttérrel
+                    String label = ""+weight;
                     Point weightLabelCoord = getLabelPoint(iCoord, jCoord);
                     Color tmpColor = g.getColor();
                     g.setColor(Color.white);
-                    g.fillRect(weightLabelCoord.x, weightLabelCoord.y-10, 15, 10);
+                    g.fillRect(weightLabelCoord.x-label.length()*3, weightLabelCoord.y-10, label.length()*7, 12);
                     g.setColor(tmpColor);
-                    g.drawString(weight+"", weightLabelCoord.x, weightLabelCoord.y);
+                    g.drawString(label, weightLabelCoord.x-label.length()*3, weightLabelCoord.y);
                 }
             }
         }
-        for(int i = 0; i < mSize; i++){//csúcsok kirajzolása, külön ciklusban hogy mindegyik él fölé legyen rajzolva
+        for(int i = 0; i < mSize; i++){//csúcsok kirajzolása, külön ciklusban hogy ne takarja él
             Point c = getCoordinates(i);
             g.setColor(Color.white);
             g.fillOval(c.x-10, c.y-10, 20,20);

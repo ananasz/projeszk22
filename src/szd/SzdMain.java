@@ -1,6 +1,5 @@
 package szd;
 
-import java.awt.Graphics;
 import java.awt.event.ActionEvent;
 import java.io.FileNotFoundException;
 import javax.swing.AbstractAction;
@@ -56,8 +55,9 @@ public class SzdMain extends JFrame{
 
         menuBar = new JMenuBar();
 
-        openItem = new JMenuItem(SZD_MENU_OPEN);
+        openItem = new JMenuItem();
         openItem.setAction(openFile);
+        openItem.setText(SZD_MENU_OPEN);
         
         menu = new JMenu(SZD_MENU_FILE);
         menu.add(openItem);
