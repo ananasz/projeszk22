@@ -19,6 +19,13 @@ import javax.swing.Timer;
  */
 class Pos {
 
+    /**
+     * Ez egy belső osztály, a board belső működéséhez kell, más osztály számára
+     * nem fontos, ezért csak belső osztály, egy pontot reprezentál.
+     *
+     * @param x a reprezentált pont x tengeleny lévő helye
+     * @param y a reprezentált pont y tengelyen lévő helye
+     */
     public Pos(int x, int y) {
         this.x = x;
         this.y = y;
@@ -28,24 +35,54 @@ class Pos {
 
 public class Board extends JPanel {
 
+    /**
+     * Ezek az attribútumok , melyek a board belső működéséhez szükségesek
+     *
+     * @param pacman a PaMan-t reprezentáló attribútum
+     * @param ghosts a Ghost-ot reprezentáló objektumok egy dinamikusan bővülő
+     * tömbje ez aza ttribútum
+     *
+     * @param d a képernyő szélességét és magasságát reprezentáló attribútum
+     * @param timer timer listener attribútum, mely időközönként újrarajzolja a
+     * képet
+     * @param delay az újrarajzoláshoz megadott időt adja meg ez az attribútum
+     *
+     * @param boardRowNumb a négyzetekből álló pálya sorainak számát adja meg
+     * @param boardColNumb a négyzetekből álló pálya oszlopainak számát adja meg
+     * @param blockWidth a négyzetek szélessége
+     * @param blockHeight a négyzetek magassága
+     * @param blockRad a négyzetek belülre írható körének sugara
+     * @param speed ez az attribútum adja meg, hogy milyen gyorsan haladjon a
+     * pacman
+     * @param maxspeed lehetséges maximum sebesség
+     * @param minspeed lehetséges minimum sebesség
+     *
+     * @param collectedCoins ez az attribútum adja meg, hogy mennyi coinon
+     * @param boardCoins a pályán található összes coin száma
+     *
+     * @param gameStartTime a játékban eltelt időhöz szükséges attribútum
+     *
+     * @param blocks a pályán található blokkokat megadó attribútumok
+     * @param coins a pályán található coinokat tartalmazó tömbök
+     */
     private PacMan pacman;
     private ArrayList<Movable> ghosts;
-
     private Dimension d;
     private Timer timer;
     private int delay;
-
     private int boardRowNumb, boardColNumb;
     private int blockWidth, blockHeight, blockRad;
     private int speed, maxspeed, minspeed;
-
     private int collectedCoins, boardCoins;
-
     private long gameStartTime;
+    private ArrayList<Pos> blocks, coins;
 
-    ArrayList<Pos> blocks;
-    ArrayList<Pos> coins;
-
+    /**
+     * timeListener egy névtelen osztályként valósít meg egy interfészt, amelyet
+     * egy Timer típusú objektum konstruktorában adunk meg, amely időközönként
+     * az ebben az osztályban megvalósított actionPerformed() metódsut hívja meg
+     * amel ebben az esetben a kép újrarajzolásáért felel
+     */
     ActionListener timerListener = new ActionListener() {
 
         @Override
@@ -53,6 +90,17 @@ public class Board extends JPanel {
             repaint();
         }
     };
+    /**
+     * dirListener egy KeyListener típusú interfészt valósít meg névtelen
+     * osztályként, amely a gombok lenyomásáért felelős a 38-as bill kód:
+     * arrow_up, mely pacman irányát felfelé állítja a 38-as bill kód:
+     * arrow_down, mely pacman irányát lefelé állítja a 38-as bill kód:
+     * arrow_left, mely pacman irányát balra állítja a 38-as bill kód:
+     * arrow_right, mely pacman irányát jobbra állítja a 38-as bill kód:
+     * numpad_plus, pacman sebességét állítja a 38-as bill kód: numpad_minus,
+     * pacman sebességét állítja
+     */
+
     KeyListener dirListener = new KeyListener() {
 
         @Override
@@ -92,10 +140,12 @@ public class Board extends JPanel {
     public Board() {
         setupPanel();
         setupVariables();
-        setupImages();
         setupListeners();
     }
 
+    /**
+     * setupPanel() metódus állítja be az alap panel beállításokat
+     */
     private void setupPanel() {
         d = new Dimension(870, 870);
         this.setSize(d);
@@ -106,13 +156,13 @@ public class Board extends JPanel {
 
     }
 
-    private void setupImages() {
-    }
-
+    /**
+     * setupVariables metódus állítja be a kezdetleges értékeket az
+     * attribútomoknak, illetve hoozza létre az objektumoakt
+     */
     private void setupVariables() {
         this.blockWidth = (this.blockHeight = 58);
         this.blockRad = blockWidth / 2;
-        this.pacman = new PacMan(this.getWidth() / 2, this.getHeight() / 2);
         this.boardRowNumb = (this.boardColNumb = d.height / this.blockWidth);
         this.speed = 1;
         this.collectedCoins = 0;
@@ -122,11 +172,15 @@ public class Board extends JPanel {
         gameStartTime = System.currentTimeMillis();
         blocks = new ArrayList<>();
         coins = new ArrayList<>();
+        this.pacman = new PacMan(this.blockWidth, this.blockHeight);
         fillMaze();
     }
 
+    /**
+     * setupListener metódus állítja be összes listenert
+     */
     private void setupListeners() {
-        //Time Listener
+        //Time Listener, ez a lsitener fiygeli, hogy 10 milisecundumokként újra rajzolja
         this.delay = 10;
         this.timer = new Timer(delay, timerListener);
         this.timer.start();
@@ -134,40 +188,94 @@ public class Board extends JPanel {
         this.addKeyListener(dirListener);
     }
 
+    /**
+     * fillMaze() metódus tölti fel a blocks illetve coins dinamikus tömböket,
+     * blokkokkal és coinokkal két része van, az egyik a blokk, másik a coin
+     * blokkok kézzel vannak beégetve, míg a coinok véletlen szerűen vannak,
+     * boardCoin darab, négyzetek közepén
+     */
     private void fillMaze() {
         //blocks
-        for (int i = 0; i < boardRowNumb * 2; ++i) {
-            blocks.add(new Pos(0, blockWidth * i / 2));
-            blocks.add(new Pos(blockWidth * i / 2, 0));
-            blocks.add(new Pos(blockWidth * i / 2, boardRowNumb * blockWidth - blockWidth));
-            blocks.add(new Pos(boardRowNumb * blockWidth - blockWidth, blockWidth * i / 2));
+        for (int i = 0; i < boardRowNumb; ++i) {
+            blocks.add(new Pos(0, blockWidth * i));
+            blocks.add(new Pos(blockWidth * i, 0));
+            blocks.add(new Pos(blockWidth * i, boardRowNumb * blockWidth - blockWidth));
+            blocks.add(new Pos(boardRowNumb * blockWidth - blockWidth, blockWidth * i));
         }
 
-        for (int i = 4; i < boardRowNumb * 2 - 5; ++i) {
-            blocks.add(new Pos(blockWidth * 2, blockWidth * i / 2));
-            blocks.add(new Pos(blockWidth * 2 + blockWidth / 2, blockWidth * i / 2));
+        for (int i = 2; i < boardRowNumb - 2; ++i) {
+            if (i == 7) {
+                continue;
+            }
+            blocks.add(new Pos(blockWidth * i, blockWidth * 2));
         }
 
-        //coins
-        int i = 0;
-        while (i < boardCoins) {
-            Pos p = new Pos((int) (new Random().nextInt(870)), (int) (new Random().nextInt(870)));
+        for (int i = 2; i < boardRowNumb - 2; ++i) {
+            if (i == 7) {
+                continue;
+            }
+            blocks.add(new Pos(blockWidth * 2, blockWidth * i));
+        }
+
+        for (int i = 4; i < boardRowNumb - 2; ++i) {
+            blocks.add(new Pos(blockWidth * i, blockWidth * 4));
+            blocks.add(new Pos(blockWidth * i, blockWidth * 8));
+            if (i == 7) {
+                continue;
+            }
+            blocks.add(new Pos(blockWidth * i, blockWidth * 6));
+        }
+
+        for (int i = 10; i < boardRowNumb - 2; ++i) {
+            blocks.add(new Pos(blockWidth * 4, blockWidth * i));
+            blocks.add(new Pos(blockWidth * 6, blockWidth * i));
+            blocks.add(new Pos(blockWidth * 8, blockWidth * i));
+        }
+
+        //3.6
+        blocks.add(new Pos(3 * blockWidth, 6 * blockHeight));
+        //6.13
+        blocks.add(new Pos(6 * blockWidth, 13 * blockHeight));
+        //8.9
+        blocks.add(new Pos(8 * blockWidth, 9 * blockHeight));
+
+        //11-13, 11-9
+        for (int i = 10; i < 13; ++i) {
+            for (int j = 12; j > 9; j--) {
+                blocks.add(new Pos(i * blockWidth, j * blockHeight));
+            }
+        }
+
+        //blocks.add();
+        /**
+         * coins véletlen szerűen generálok 1...boardRowNumb/boardColNumb egy
+         * számot, majd megszorozva blockWidth/blockHeight-el, kapom meg a
+         * négyzetek helyét. hozzáadva blockRad-ot a pont x és y tengehlyez adja
+         * meg a négyzet közepét
+         */
+        for (int i = 0; i < boardCoins;) {
+            Pos p = new Pos((new Random().nextInt(boardRowNumb)) * blockWidth, (new Random().nextInt(boardColNumb)) * blockHeight);
             if ((blockCollison(p.x, p.y))
                     && (blockCollison(p.x - blockRad, p.y))
                     && (blockCollison(p.x + blockRad, p.y))
                     && (blockCollison(p.x, p.y - blockRad))
                     && (blockCollison(p.x, p.y + blockRad))) {
-                this.coins.add(p);
+
+                this.coins.add(new Pos(p.x + blockRad, p.y + blockRad));
                 ++i;
+
             }
         }
 
     }
 
+    /**
+     * movePacMan metódus, mely megváltoztatja pacman irányát, ellenörzések után
+     */
     private void movePacMan() {
         coinCollison(this.pacman.getPos().x, this.pacman.getPos().y);
         ghostCollison();
-        
+
         int diff = 5;
         switch (this.pacman.getDir()) {
             case LEFT:
@@ -224,10 +332,18 @@ public class Board extends JPanel {
         }
     }
 
+    /**
+     *
+     * pacman rajzolása színtérbe
+     */
     private void drawPacman(Graphics2D g) {
         g.drawImage(this.pacman.getImage(), pacman.getPos().x, pacman.getPos().y, this);
     }
 
+    /**
+     *
+     * státusz feliratok rajzolása színtérbe
+     */
     private void drawStatus(Graphics2D g2d) {
         g2d.setColor(Color.RED);
         g2d.drawString("COLLECTED POINTS: " + this.collectedCoins, 10, 10);
@@ -235,6 +351,10 @@ public class Board extends JPanel {
         g2d.drawString("ELAPSED TIME: " + (System.currentTimeMillis() - this.gameStartTime) / 1000, 10, 30);
     }
 
+    /**
+     *
+     * labirintus kirajzolása színtérbe, coinokkal együtt
+     */
     private void drawMaze(Graphics2D g2d) {
         //páya feltöltése fekete színnel
         for (Pos p : blocks) {
@@ -247,6 +367,14 @@ public class Board extends JPanel {
         }
     }
 
+    /**
+     * p és q Pos típusú pontokat leellenörzi, közös körlapon vannak-e
+     *
+     * @param p
+     * @param q
+     * @param rad
+     * @return p és q Pos típusú pontokat leellenörzi, közös körlapon vannak-e
+     */
     private boolean checkIsNotCollided(Pos p, Pos q, int rad) {
 
         if ((p.x - q.x) * (p.x - q.x) + (p.y - q.y) * (p.y - q.y) < (rad) * (rad)) {
@@ -256,30 +384,52 @@ public class Board extends JPanel {
         return true;
     }
 
+    /**
+     * speed növelésse m-mel, 1 és 6 között max, ennyivel több pixelt fog ugrani
+     * két kirajzolás között
+     *
+     * @param m
+     */
     private void setSpeed(int m) {
         if (!(this.speed + m > this.maxspeed || this.speed + m < this.minspeed)) {
             this.speed += m;
         }
     }
 
+    /**
+     * x és y pont bele esik-e coinok körüli körlpra
+     *
+     * @param x
+     * @param y
+     */
     private void coinCollison(int x, int y) {
 
         for (Pos p : coins) {
             if (!(checkIsNotCollided(p, new Pos(x + this.blockRad, y + this.blockRad), this.blockRad + 5))) {
                 coins.remove(p);
                 this.collectedCoins++;
-                break;
+                return;
             }
         }
     }
 
+    /**
+     * van-e szelemekkel collison, szellemek köüli körlapon
+     */
     private void ghostCollison() {
 
     }
 
+    /**
+     * x és y pont bele esik e blokkok körüli körlapon
+     *
+     * @param x
+     * @param y
+     * @return x és y pont bele esik e blokkok körüli körlapon
+     */
     private boolean blockCollison(int x, int y) {
         for (Pos p : blocks) {
-            if (!checkIsNotCollided(new Pos(x + this.blockRad, y + this.blockRad), new Pos(p.x + this.blockRad,p.y + this.blockRad), this.blockRad)) {
+            if (!checkIsNotCollided(new Pos(x, y), new Pos(p.x, p.y), this.blockRad)) {
                 return false;
             }
         }
@@ -293,6 +443,11 @@ public class Board extends JPanel {
 
     }
 
+    /**
+     * minden kirajzolásnál meghívott metódus
+     *
+     * @param g
+     */
     private void drawBoard(Graphics g) {
         Graphics2D g2d = (Graphics2D) g;
 
@@ -300,6 +455,13 @@ public class Board extends JPanel {
         drawMaze(g2d);
         drawPacman(g2d);
         drawStatus(g2d);
+    }
+/**
+ * 
+ * @return visszaadja, hogy a pacman objektum dead értékét
+ */
+    public boolean isDead() {
+        return this.pacman.isDead();
     }
 
 }
