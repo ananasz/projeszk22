@@ -26,6 +26,7 @@ public class SzdMain extends JFrame{
             if (ret == JFileChooser.APPROVE_OPTION) {
                 try {
                     matrix = new MatrixReader(fc.getSelectedFile());
+                    matrix.print();
                     drawPanel.setMatrix(matrix);
                     drawPanel.repaint();
                 } catch (FileNotFoundException ex) {
@@ -34,6 +35,16 @@ public class SzdMain extends JFrame{
                     JOptionPane.showMessageDialog(null, "Hiba a mátrix beolvasásakor: " + ex.getMessage());
                 }
             }
+        }
+    };
+    
+    private final Action findShortest = new AbstractAction() {
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            MatrixPathfinder p = new MatrixPathfinder(matrix);
+            drawPanel.setMatrix(p.getShortestPath(0, 1));
+            drawPanel.repaint();
         }
     };
     
@@ -59,8 +70,14 @@ public class SzdMain extends JFrame{
         openItem.setAction(openFile);
         openItem.setText(SZD_MENU_OPEN);
         
+        JMenuItem shortI;
+        shortI = new JMenuItem();
+        shortI.setAction(findShortest);
+        shortI.setText("short");
+        
         menu = new JMenu(SZD_MENU_FILE);
         menu.add(openItem);
+        menu.add(shortI);
         menuBar.add(menu);
 
         setJMenuBar(menuBar);

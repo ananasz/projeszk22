@@ -40,12 +40,27 @@ public class MatrixReader {
     }
     
     public float get(int i, int j){
+        if(i==j)
+            return 1; //1 valószínűséggel éri el saját magát minden csúcs
+        if(i < j) //a felső háromszögből kérdezünk le, használjuk a szimmetriát
+            return matrix.get( ( j*(j-1) + 2*i )/2 );
         return matrix.get( ( i*(i-1) + 2*j )/2 );
     }
     
     public void set(int i, int j, float value){
-        matrix.set( ( i*(i-1) + 2*j )/2, value);
+        if(i < j) //a felső háromszögben változtatunk, használjuk a szimmetriát
+            matrix.set( ( j*(j-1) + 2*i )/2, value);
+        else
+            matrix.set( ( i*(i-1) + 2*j )/2, value);
     }
+    
+    public float[] getRow(int i){
+       float[] ret = new float[n];
+        for(int j = 0; j<n; j++)
+            ret[j] = get(i, j);
+        return ret;
+    }
+    
     
     public int getSize(){
         return n;
@@ -56,15 +71,17 @@ public class MatrixReader {
     }
     
     public void print(){
-        for(int i = 1; i < n; i++){
-            for(int j = 0; j < i; j++){
-                System.out.print(get(i, j)+"("+ (( i*(i-1) + 2*j )/2) +") ");
+        System.out.println();
+        for(int i = 0; i < n; i++){
+            for(int j = 0; j < n; j++){
+                System.out.print(get(i, j)+" ");
             }
-            System.out.println("");
+            System.out.println();
         }
         System.out.println("Raw: ");
         for(int i = 0; i < matrix.size(); i++){
             System.out.print(matrix.get(i) + " ");
         }
+        System.out.println();
     }
 }
