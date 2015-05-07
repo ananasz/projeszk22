@@ -37,6 +37,8 @@ public class SzdMain extends JFrame implements ActionListener{
                 try {
                     matrix = new MatrixManager(fc.getSelectedFile());
                     drawPanel.setMatrix(matrix);
+                    fromNode = -1;
+                    toNode = -1;
                     pathFinder = new MatrixPathfinder(matrix);
                     drawPanel.repaint();
                     setupButtons();
