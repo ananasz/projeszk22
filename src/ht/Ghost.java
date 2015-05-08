@@ -5,6 +5,7 @@
  */
 package ht;
 
+import java.awt.Color;
 import java.awt.Image;
 import javax.swing.ImageIcon;
 
@@ -12,32 +13,65 @@ import javax.swing.ImageIcon;
  *
  * @author Herendi Tibor
  */
+enum GhostColor {
+
+    RED, ORANGE, CYAN, PINK
+};
+
 public class Ghost implements Movable {
 
     private int x, y;
     private boolean dead;
+    private boolean weak;
     private Direction dir;
     private Image leftImg;
     private Image rightImg;
+    private Image upImg;
+    private Image downImg;
     private Image currImg;
     private Image weakImg;
 
     public final int ghost_text_height = 58;
     public final int ghost_text_width = 58;
 
-    public Ghost(int x, int y) {
+    public Ghost(int x, int y, GhostColor c) {
         this.x = x;
         this.y = y;
         this.dead = false;
         this.dir = Direction.RIGHT;
-        //setupImages();
+        weak = false;
+        setupImages(c);
 
     }
 
-    private void setupImages() {
-        this.leftImg = new ImageIcon(getClass().getResource("textures\\pacman_right.png")).getImage();
-        this.rightImg = new ImageIcon(getClass().getResource("textures\\pacman_right.png")).getImage();
-        this.weakImg = new ImageIcon(getClass().getResource("textures\\pacman_right.png")).getImage();
+    private void setupImages(GhostColor c) {
+        switch (c) {
+            case RED:
+                this.leftImg = new ImageIcon(getClass().getResource("textures\\ghost_red_left.png")).getImage();
+                this.rightImg = new ImageIcon(getClass().getResource("textures\\ghost_red_right.png")).getImage();
+                this.downImg = new ImageIcon(getClass().getResource("textures\\ghost_red_down.png")).getImage();
+                this.upImg = new ImageIcon(getClass().getResource("textures\\ghost_red_up.png")).getImage();
+                break;
+            case PINK:
+                this.leftImg = new ImageIcon(getClass().getResource("textures\\ghost_pink_left.png")).getImage();
+                this.rightImg = new ImageIcon(getClass().getResource("textures\\ghost_pink_right.png")).getImage();
+                this.downImg = new ImageIcon(getClass().getResource("textures\\ghost_pink_down.png")).getImage();
+                this.upImg = new ImageIcon(getClass().getResource("textures\\ghost_pink_up.png")).getImage();
+                break;
+            case CYAN:
+                this.leftImg = new ImageIcon(getClass().getResource("textures\\ghost_cyan_left.png")).getImage();
+                this.rightImg = new ImageIcon(getClass().getResource("textures\\ghost_cyan_right.png")).getImage();
+                this.downImg = new ImageIcon(getClass().getResource("textures\\ghost_cyan_down.png")).getImage();
+                this.upImg = new ImageIcon(getClass().getResource("textures\\ghost_cyan_up.png")).getImage();
+                break;
+            case ORANGE:
+                this.leftImg = new ImageIcon(getClass().getResource("textures\\ghost_orange_left.png")).getImage();
+                this.rightImg = new ImageIcon(getClass().getResource("textures\\ghost_orange_right.png")).getImage();
+                this.downImg = new ImageIcon(getClass().getResource("textures\\ghost_orange_down.png")).getImage();
+                this.upImg = new ImageIcon(getClass().getResource("textures\\ghost_orange_up.png")).getImage();
+                break;
+        }
+
         this.currImg = rightImg;
     }
 
@@ -71,6 +105,12 @@ public class Ghost implements Movable {
                 break;
             case RIGHT:
                 this.currImg = this.rightImg;
+                break;
+            case UP:
+                this.currImg = this.upImg;
+                break;
+            case DOWN:
+                this.currImg = this.downImg;
                 break;
         }
     }

@@ -163,18 +163,24 @@ public class Board extends JPanel {
      */
     private void setupVariables() {
         this.blockWidth = (this.blockHeight = 58);
-        this.blockRad = blockWidth / 2;
-        this.boardRowNumb = (this.boardColNumb = d.height / this.blockWidth);
+        this.blockRad = this.blockWidth / 2;
+        this.boardRowNumb = (this.boardColNumb = this.d.height / this.blockWidth);
         this.speed = 1;
         this.collectedCoins = 0;
         this.boardCoins = 60;
         this.maxspeed = 4;
         this.minspeed = 1;
-        gameStartTime = System.currentTimeMillis();
-        blocks = new ArrayList<>();
-        coins = new ArrayList<>();
-        this.pacman = new PacMan(this.blockWidth, this.blockHeight);
+        this.gameStartTime = System.currentTimeMillis();
+        this.blocks = new ArrayList<>();
+        this.coins = new ArrayList<>();
         this.gameEnded = false;
+        //Movable objektumok
+        this.pacman = new PacMan(this.blockWidth, this.blockHeight);
+        this.ghosts = new ArrayList<>();
+        this.ghosts.add(new Ghost(1 * blockWidth, (boardColNumb - 2) * blockHeight, GhostColor.RED));
+        this.ghosts.add(new Ghost(3 * blockWidth, (boardColNumb - 2) * blockHeight, GhostColor.PINK));
+        this.ghosts.add(new Ghost(3 * blockWidth, (boardColNumb - 2) * blockHeight, GhostColor.ORANGE));
+        this.ghosts.add(new Ghost(3 * blockWidth, (boardColNumb - 2) * blockHeight, GhostColor.CYAN));
         fillMaze();
     }
 
@@ -247,6 +253,8 @@ public class Board extends JPanel {
                 blocks.add(new Pos(i * blockWidth, j * blockHeight));
             }
         }
+        
+        blocks.add(new Pos(blockWidth *13, blockWidth * 4));
 
         //blocks.add();
         /**
@@ -272,74 +280,76 @@ public class Board extends JPanel {
     }
 
     /**
-     * movePacMan metódus, mely megváltoztatja pacman irányát, ellenörzések után
+     * moveMovables metódus, mely megváltoztatja pacman irányát, ellenörzések
+     * után Movable típusú objektumoknak
      */
-    private void movePacMan() {
-        coinCollison(this.pacman.getPos().x, this.pacman.getPos().y);
-        ghostCollison();
+    private void moveMovables(Movable mov) {
 
-        int diff = 5;
-        switch (this.pacman.getDir()) {
+        int diff = 6;
+        switch (mov.getDir()) {
             case LEFT:
-                if (!(blockCollison((pacman.getPos().x + -1 * speed - blockRad), pacman.getPos().y))) {
-                    return;
+                if (!(blockCollison((mov.getPos().x - speed - blockRad), mov.getPos().y))
+                        || (!(blockCollison((mov.getPos().x - speed - blockRad), mov.getPos().y + blockRad - diff)))
+                        || (!(blockCollison((mov.getPos().x - speed - blockRad), mov.getPos().y - blockRad + diff)))) {
+                    if (mov instanceof Ghost) {
+                        Direction d = ((new Random()).nextInt(2) == 0) ? Direction.UP : Direction.DOWN;
+                        mov.changeDir(d);
+                    }
+                } else {
+                    mov.move(-1 * speed, 0);
                 }
-                if (!(blockCollison((pacman.getPos().x + -1 * speed - blockRad), pacman.getPos().y + blockRad - diff))) {
-                    return;
-                }
-                if (!(blockCollison((pacman.getPos().x + -1 * speed - blockRad), pacman.getPos().y - blockRad + diff))) {
-                    return;
-                }
-                this.pacman.move(-1 * speed, 0);
                 break;
 
             case RIGHT:
-                if (!(blockCollison((pacman.getPos().x + 1 * speed + blockRad), pacman.getPos().y))) {
-                    return;
+                if ((!(blockCollison((mov.getPos().x + 1 * speed + blockRad), mov.getPos().y)))
+                        || (!(blockCollison((mov.getPos().x + 1 * speed + blockRad), mov.getPos().y + blockRad - diff)))
+                        || (!(blockCollison((mov.getPos().x + 1 * speed + blockRad), mov.getPos().y - blockRad + diff)))) {
+                    if (mov instanceof Ghost) {
+                        Direction d = ((new Random()).nextInt(2) == 0) ? Direction.UP : Direction.DOWN;
+                        mov.changeDir(d);
+                    }
+                } else {
+                    mov.move(1 * speed, 0);
                 }
-                if (!(blockCollison((pacman.getPos().x + 1 * speed + blockRad), pacman.getPos().y + blockRad - diff))) {
-                    return;
-                }
-                if (!(blockCollison((pacman.getPos().x + 1 * speed + blockRad), pacman.getPos().y - blockRad + diff))) {
-                    return;
-                }
-                this.pacman.move(1 * speed, 0);
                 break;
 
             case UP:
-                if (!(blockCollison((pacman.getPos()).x, pacman.getPos().y + -1 * speed - blockRad))) {
-                    return;
+                if ((!(blockCollison((mov.getPos()).x, mov.getPos().y + -1 * speed - blockRad)))
+                        || (!(blockCollison((mov.getPos().x + blockRad - diff), mov.getPos().y + -1 * speed - blockRad)))
+                        || (!(blockCollison((mov.getPos().x - blockRad + diff), mov.getPos().y + -1 * speed - blockRad)))) {
+                    if (mov instanceof Ghost) {
+                        Direction d = ((new Random()).nextInt(2) == 0) ? Direction.LEFT : Direction.RIGHT;
+                        mov.changeDir(d);
+                    }
+                } else {
+                    mov.move(0, -1 * speed);
                 }
-                if (!(blockCollison((pacman.getPos().x + blockRad - diff), pacman.getPos().y + -1 * speed - blockRad))) {
-                    return;
-                }
-                if (!(blockCollison((pacman.getPos().x - blockRad + diff), pacman.getPos().y + -1 * speed - blockRad))) {
-                    return;
-                }
-                this.pacman.move(0, -1 * speed);
                 break;
 
             case DOWN:
-                if (!(blockCollison(pacman.getPos().x, pacman.getPos().y + 1 * speed + blockRad))) {
-                    return;
+                if ((!(blockCollison(mov.getPos().x, mov.getPos().y + 1 * speed + blockRad)))
+                        || (!(blockCollison((mov.getPos().x + blockRad - diff), mov.getPos().y + 1 * speed + blockRad)))
+                        || (!(blockCollison((mov.getPos().x - blockRad + diff), mov.getPos().y + 1 * speed + blockRad)))) {
+                    if (mov instanceof Ghost) {
+                        Direction d = ((new Random()).nextInt(2) == 0) ? Direction.LEFT : Direction.RIGHT;
+                        mov.changeDir(d);
+                    }
+                } else {
+                    mov.move(0, 1 * speed);
                 }
-                if (!(blockCollison((pacman.getPos().x + blockRad - diff), pacman.getPos().y + 1 * speed + blockRad))) {
-                    return;
-                }
-                if (!(blockCollison((pacman.getPos().x - blockRad + diff), pacman.getPos().y + 1 * speed + blockRad))) {
-                    return;
-                }
-                this.pacman.move(0, 1 * speed);
                 break;
         }
     }
 
     /**
      *
-     * pacman rajzolása színtérbe
+     * movable objektumok rajzolása színtérbe
      */
-    private void drawPacman(Graphics2D g) {
+    private void drawMovables(Graphics2D g) {
         g.drawImage(this.pacman.getImage(), pacman.getPos().x, pacman.getPos().y, this);
+        for (Movable m : ghosts) {
+            g.drawImage(m.getImage(), m.getPos().x, m.getPos().y, this);
+        }
     }
 
     /**
@@ -404,8 +414,9 @@ public class Board extends JPanel {
      * @param x
      * @param y
      */
-    private void coinCollison(int x, int y) {
-
+    private void coinCollison() {
+    int x = this.pacman.getPos().x;
+    int y = this.pacman.getPos().y;
         for (Pos p : coins) {
             if (!(checkIsNotCollided(p, new Pos(x + this.blockRad, y + this.blockRad), this.blockRad + 5))) {
                 coins.remove(p);
@@ -419,7 +430,13 @@ public class Board extends JPanel {
      * van-e szelemekkel collison, szellemek köüli körlapon
      */
     private void ghostCollison() {
-
+        for (Movable p : ghosts) {
+            if (!(checkIsNotCollided(p.getPos(), new Pos(pacman.getPos().x, pacman.getPos().y), this.blockRad + 5))) {
+                this.speed = 0;
+                this.gameEnded = true;
+                this.pacman.setDead(true);
+            }
+        }
     }
 
     /**
@@ -453,27 +470,33 @@ public class Board extends JPanel {
     private void drawBoard(Graphics g) {
         Graphics2D g2d = (Graphics2D) g;
 
-        movePacMan();
+        moveMovables(this.pacman);
+        for (Movable ghost : ghosts) {
+            moveMovables(ghost);
+        }
+        coinCollison();
+        ghostCollison();
         drawMaze(g2d);
-        drawPacman(g2d);
+        drawMovables(g2d);
         drawStatus(g2d);
         checkCondition();
     }
-/**
- * 
- * @return visszaadja, hogy a pacman objektum dead értékét
- */
+
+    /**
+     *
+     * @return visszaadja, hogy a pacman objektum dead értékét
+     */
     public boolean isDead() {
         return this.pacman.isDead();
     }
-    
-    public void checkCondition(){
-        if((this.collectedCoins >= boardCoins) || (pacman.isDead())){
+
+    public void checkCondition() {
+        if ((this.collectedCoins >= boardCoins) || (pacman.isDead())) {
             this.gameEnded = true;
         }
     }
-    
-    public boolean isGameEnded(){
+
+    public boolean isGameEnded() {
         return this.gameEnded;
     }
 
