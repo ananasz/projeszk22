@@ -76,7 +76,7 @@ public class Board extends JPanel {
     private int collectedCoins, boardCoins;
     private long gameStartTime;
     private ArrayList<Pos> blocks, coins;
-    private boolean gameEnded;
+    private volatile boolean gameEnded;
 
     /**
      * timeListener egy névtelen osztályként valósít meg egy interfészt, amelyet
@@ -360,7 +360,7 @@ public class Board extends JPanel {
         g2d.setColor(Color.RED);
         g2d.drawString("COLLECTED POINTS: " + this.collectedCoins, 10, 10);
         g2d.drawString("SPEED: " + this.speed, 10, 20);
-        g2d.drawString("ELAPSED TIME: " + (System.currentTimeMillis() - this.gameStartTime) / 1000, 10, 30);
+        g2d.drawString("ELAPSED TIME: " + (System.currentTimeMillis() - this.gameStartTime) / 1000 + " sec", 10, 30);
     }
 
     /**
@@ -495,9 +495,17 @@ public class Board extends JPanel {
             this.gameEnded = true;
         }
     }
+    
+    public long gameEndedTime(){
+        return (System.currentTimeMillis() - this.gameStartTime) / 1000;
+    }
 
     public boolean isGameEnded() {
         return this.gameEnded;
+    }
+    
+    public int getCollectedCoins(){
+        return this.collectedCoins;
     }
 
 }

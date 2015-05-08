@@ -19,11 +19,15 @@ public class EndGamePanel extends JPanel {
 
     private int chosenMenu;
     private boolean isDead;
-    
-    public EndGamePanel(boolean isDead){
+    private long gameEndedTime;
+    private int collectedCoins;
+
+    public EndGamePanel(boolean isDead, long gameEndedTime, int collectedCoins) {
         super();
         this.chosenMenu = 0;
         this.isDead = isDead;
+        this.gameEndedTime = gameEndedTime;
+        this.collectedCoins = collectedCoins;
     }
 
     @Override
@@ -31,10 +35,15 @@ public class EndGamePanel extends JPanel {
         super.paintComponent(g);
 
         //g.drawImage(new ImageIcon(getClass().getResource("textures\\pacman_logo_done_yellowgreen.png")).getImage(), 0, 0, null);
-
-        g.setFont(new Font("Serif", Font.BOLD, 60));
-        g.setColor(Color.red);
-        g.drawString("YOU DIED", this.getWidth() / 2 - 50, 50);
+        if (isDead) {
+            g.setFont(new Font("Serif", Font.BOLD, 60));
+            g.setColor(Color.red);
+            g.drawString("YOU DIED", this.getWidth() / 2 - 80, 50);
+        } else {
+            g.setFont(new Font("Serif", Font.BOLD, 60));
+            g.setColor(Color.green);
+            g.drawString("YOU WON", this.getWidth() / 2 - 80, 50);
+        }
 
         g.setFont(new Font("Serif", Font.BOLD, 12));
         if (chosenMenu == 0) {
@@ -49,6 +58,10 @@ public class EndGamePanel extends JPanel {
             g.setColor(Color.white);
         }
         g.drawString("EXIT GAME", this.getWidth() / 2, 270);
+
+        g.setColor(Color.white);
+        g.drawString("GAME TIME: " + gameEndedTime + " sec", this.getWidth() / 2, 200);
+        g.drawString("COLLECTED COINS: " + collectedCoins, this.getWidth() / 2, 210);
     }
 
     public void incChosenMenu() {

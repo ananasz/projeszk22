@@ -15,7 +15,7 @@ import javax.swing.ImageIcon;
 public class PacMan implements Movable {
 
     private int x, y;
-    private boolean dead;
+    private volatile boolean dead;
     private Direction dir;
 
     private Image currImg;
