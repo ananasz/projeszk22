@@ -12,6 +12,7 @@ import javax.swing.JPanel;
 import static projeszk22.Consts.*;
 import szd.SzdMain;
 import ht.HtMain;
+import ib.IbMain;
 import kg.*;
 
 public class MainWindow extends JFrame implements ActionListener{
@@ -79,7 +80,7 @@ public class MainWindow extends JFrame implements ActionListener{
             new HtMain().setVisible(true);
             //System.out.println("HT");
         }else if( src.equals(ibBtn) ){
-            System.out.println("IB");
+            new IbMain().setVisible(true);
         }else if( src.equals(kgBtn) ){
             ColorGameLogic cgl = new ColorGameLogic();
             new ColorGameFrame(cgl).setVisible(true);
