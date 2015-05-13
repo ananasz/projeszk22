@@ -14,6 +14,7 @@ import szd.SzdMain;
 import ht.HtMain;
 import ib.IbMain;
 import kg.*;
+import pd.PDFrame;
 
 public class MainWindow extends JFrame implements ActionListener{
 
@@ -85,7 +86,7 @@ public class MainWindow extends JFrame implements ActionListener{
             ColorGameLogic cgl = new ColorGameLogic();
             new ColorGameFrame(cgl).setVisible(true);
         }else if( src.equals(pdBtn) ){
-            System.out.println("PD");
+            new PDFrame().setVisible(true);
         }else if( src.equals(szdBtn) ){
             new SzdMain().setVisible(true);
         }
