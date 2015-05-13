@@ -122,10 +122,10 @@ public class HtMain extends JFrame {
 
     private void setupGamePanel() {
         bgp = new Board();
+        this.add(bgp);
         bgp.setFocusable(true);
         bgp.requestFocus();
         bgp.requestFocusInWindow();
-        this.add(bgp);
         bgp.updateUI();
         this.pack();
         new Thread(endGameWatcher).start();
@@ -149,7 +149,6 @@ public class HtMain extends JFrame {
         boolean isdead = bgp.isDead();
         long gametime = bgp.gameEndedTime();
         int collected = bgp.getCollectedCoins();
-        bgp.setFocusable(false);
         egp = new EndGamePanel(isdead, gametime, collected);
         egp.setLayout(new FlowLayout());
         egp.setSize(870, 870);
@@ -158,10 +157,10 @@ public class HtMain extends JFrame {
         egp.setFocusable(true);
         egp.addKeyListener(endGameListener);
         egp.setFocusable(true);
-        egp.requestFocus();
-        egp.requestFocusInWindow();
         remove(bgp);
         add(egp);
+        egp.requestFocus();
+        egp.requestFocusInWindow();
         egp.updateUI();
         this.pack();
 
