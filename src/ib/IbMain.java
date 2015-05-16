@@ -1,23 +1,25 @@
 package ib;
 
+import java.awt.Color;
+import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import javax.swing.AbstractAction;
+import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import static javax.swing.JOptionPane.showMessageDialog;
+import javax.swing.JPanel;
+import static projeszk22.Consts.*;
 
-public class IbMain extends JFrame {
+public class IbMain extends JFrame implements KeyListener {
 
-    public final static int IB_MENU_HEIGHT = 50;
-    public final static int IB_FRAME_HEIGHT = 500 + IB_MENU_HEIGHT;
-    public final static int IB_FRAME_WIDTH = 500;
-    public final static String IB_FRAME_TITLE = "Slide Puzzle";
-    public final static String IB_NEW_GAME = "Új játék";
-    public final static String IB_EXIT = "Kilépés";
-    public final static String IB_MENU = "Menü";
+    private final GameLogic logic = new GameLogic(IB_DEFAULT_SIZE);
+    private final JButton[][] buttons = new JButton[IB_DEFAULT_SIZE][IB_DEFAULT_SIZE];
 
-    //private JPanel menu;
     public IbMain() {
         initializeFrame();
         setupFrame();
@@ -52,21 +54,40 @@ public class IbMain extends JFrame {
         menu = new JMenu(IB_MENU);
         menu.add(newGameItem);
         menu.add(exitItem);
-        
+
         menuBar.add(menu);
 
         setJMenuBar(menuBar);
     }
 
     private void newGame() {
-
+        logic.newGame();
+        refresh();
     }
 
     private void exit() {
-
+        this.setVisible(false);
+        logic.newGame();
+        refresh();
     }
 
     private void setupFrame() {
+        JPanel panel = new JPanel();
+        panel.setLayout(new GridLayout(logic.getSize(), logic.getSize()));
+        for (int i = 0; i < logic.getSize(); i++) {
+            for (int j = 0; j < logic.getSize(); j++) {
+                JButton btn = (logic.getNum(i, j) == 0) ? new JButton("") : new JButton(logic.getNum(i, j) + "");
+                if (logic.getNum(i, j) == 0) {
+                    btn.setBackground(Color.GRAY);
+                } else {
+                    btn.setBackground(Color.WHITE);
+                }
+                buttons[i][j] = btn;
+                btn.addKeyListener(this);
+                panel.add(btn);
+            }
+        }
+        add(panel);
 
     }
 
@@ -75,4 +96,61 @@ public class IbMain extends JFrame {
         setSize(IB_FRAME_WIDTH, IB_FRAME_HEIGHT);
     }
 
+    @Override
+    public void keyPressed(KeyEvent e) {
+        int key = e.getKeyCode();
+
+        if (key == KeyEvent.VK_LEFT) {
+            logic.slideLeft();
+        }
+
+        if (key == KeyEvent.VK_RIGHT) {
+            logic.slideRight();
+        }
+
+        if (key == KeyEvent.VK_UP) {
+            logic.slideUp();
+        }
+
+        if (key == KeyEvent.VK_DOWN) {
+            logic.slideDown();
+        }
+
+        refresh();
+
+        if (logic.isGameOverLogic()) {
+            doSomeGameOverThing();
+        }
+    }
+
+    private void doSomeGameOverThing() {
+        if (!logic.isGameOver()) {
+            showMessageDialog(null, IB_WIN_TEXT);
+        }
+        logic.setGameOver(true);
+    }
+
+    private void refresh() {
+        for (int i = 0; i < logic.getSize(); i++) {
+            for (int j = 0; j < logic.getSize(); j++) {
+                if (logic.getTable()[i][j] == 0) {
+                    buttons[i][j].setText("");
+                    buttons[i][j].setBackground(Color.GRAY);
+                } else {
+                    buttons[i][j].setText(logic.getTable()[i][j] + "");
+                    buttons[i][j].setBackground(Color.white);
+                }
+            }
+        }
+    }
+
+    @Override
+    public void keyTyped(KeyEvent e) {
+        //
+    }
+
+    @Override
+    public void keyReleased(KeyEvent e) {
+        //
+    }
 }
