@@ -38,7 +38,9 @@ public class Consts {
     public final static String IB_EXIT = "Kilépés";
     public final static String IB_MENU = "Menü";
     public final static String IB_WIN_TEXT = "Gratulálunk, nyertél!";
+    public final static String IB_WIN_TITLE = "Nyertél!";
     public final static int IB_DEFAULT_SIZE = 4;
-    public static final int IB_NUMBER_OF_RANDOMIZATION = 10;
+    public final static int IB_NUMBER_OF_RANDOMIZATION = 100;
+    public final static java.awt.Color IB_GOOD_PLACE_COLOR = new java.awt.Color(0.85f, 0.9f, 0.85f);
 
 }

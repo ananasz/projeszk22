@@ -32,82 +32,63 @@ public class GameLogic {
 
     private void randomizeTable() {
         Random rnd = new Random();
-        for (int i = 0; i < IB_NUMBER_OF_RANDOMIZATION; i++) {
+        int i = 0;
+        while (i <= IB_NUMBER_OF_RANDOMIZATION) {
             switch (rnd.nextInt() % 4) {
                 case (0):
-                    slideUp();
+                    i += slideUp();
                     break;
                 case (1):
-                    slideDown();
+                    i += slideDown();
                     break;
                 case (2):
-                    slideLeft();
+                    i += slideLeft();
                     break;
                 case (3):
-                    slideRight();
+                    i += slideRight();
                     break;
             }
         }
     }
 
-    public void slideDown() {
-        if (!gameOver) {
-            for (int i = 0; i < size - 1; i++) {
-                for (int j = 0; j < size; j++) {
-                    if (table[i][j] == 0) {
-                        int s = table[i][j];
-                        table[i][j] = table[i + 1][j];
-                        table[i + 1][j] = s;
-                        return;
-                    }
-                }
-            }
-        }
+    public int slideDown() {
+        return slide(-1, 0);
     }
 
-    public void slideUp() {
-        if (!gameOver) {
-            for (int i = 1; i < size; i++) {
-                for (int j = 0; j < size; j++) {
-                    if (table[i][j] == 0) {
-                        int s = table[i][j];
-                        table[i][j] = table[i - 1][j];
-                        table[i - 1][j] = s;
-                        return;
-                    }
-                }
-            }
-        }
+    public int slideUp() {
+        return slide(1, 0);
     }
 
-    public void slideRight() {
-        if (!gameOver) {
-            for (int i = 0; i < size; i++) {
-                for (int j = 0; j < size - 1; j++) {
-                    if (table[i][j] == 0) {
-                        int s = table[i][j];
-                        table[i][j] = table[i][j + 1];
-                        table[i][j + 1] = s;
-                        return;
-                    }
-                }
-            }
-        }
+    public int slideRight() {
+        return slide(0, -1);
     }
 
-    public void slideLeft() {
-        if (!gameOver) {
-            for (int i = 0; i < size; i++) {
-                for (int j = 1; j < size; j++) {
-                    if (table[i][j] == 0) {
-                        int s = table[i][j];
-                        table[i][j] = table[i][j - 1];
-                        table[i][j - 1] = s;
-                        return;
-                    }
+    public int slideLeft() {
+        return slide(0, 1);
+    }
+
+    /**
+     *
+     * @param x : 1 for up, -1 for down
+     * @param y : 1 for left, -1 for right
+     * @return : 1 ha sikeres lépés, 0 ha nem
+     */
+    public int slide(int x, int y) {
+        if (Math.abs(x) + Math.abs(y) != 1 || gameOver) {
+            return 0;
+        }
+
+        for (int i = (x == 1) ? 1 : 0; i < ((x == -1) ? size - 1 : size); i++) {
+            for (int j = (y == 1) ? 1 : 0; j < ((y == -1) ? size - 1 : size); j++) {
+                if (table[i][j] == 0) {
+                    int s = table[i][j];
+                    table[i][j] = table[i - x][j - y];
+                    table[i - x][j - y] = s;
+                    return 1;
                 }
             }
         }
+        return 0;
     }
 
     public int getSize() {

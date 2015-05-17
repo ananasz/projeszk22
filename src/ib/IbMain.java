@@ -76,18 +76,14 @@ public class IbMain extends JFrame implements KeyListener {
         panel.setLayout(new GridLayout(logic.getSize(), logic.getSize()));
         for (int i = 0; i < logic.getSize(); i++) {
             for (int j = 0; j < logic.getSize(); j++) {
-                JButton btn = (logic.getNum(i, j) == 0) ? new JButton("") : new JButton(logic.getNum(i, j) + "");
-                if (logic.getNum(i, j) == 0) {
-                    btn.setBackground(Color.GRAY);
-                } else {
-                    btn.setBackground(Color.WHITE);
-                }
+                JButton btn = new JButton();
                 buttons[i][j] = btn;
                 btn.addKeyListener(this);
                 panel.add(btn);
             }
         }
         add(panel);
+        refresh();
 
     }
 
@@ -125,7 +121,7 @@ public class IbMain extends JFrame implements KeyListener {
 
     private void doSomeGameOverThing() {
         if (!logic.isGameOver()) {
-            showMessageDialog(null, IB_WIN_TEXT);
+            showMessageDialog(null, IB_WIN_TEXT, IB_WIN_TITLE, 1);
         }
         logic.setGameOver(true);
     }
@@ -139,6 +135,9 @@ public class IbMain extends JFrame implements KeyListener {
                 } else {
                     buttons[i][j].setText(logic.getTable()[i][j] + "");
                     buttons[i][j].setBackground(Color.white);
+                }
+                if (logic.getTable()[i][j] == i * logic.getSize() + j && logic.getTable()[i][j] != 0) {
+                    buttons[i][j].setBackground(IB_GOOD_PLACE_COLOR);
                 }
             }
         }
