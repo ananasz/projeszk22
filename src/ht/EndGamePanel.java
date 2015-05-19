@@ -8,7 +8,6 @@ package ht;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
-import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 
 /**
@@ -21,28 +20,53 @@ public class EndGamePanel extends JPanel {
     private boolean isDead;
     private long gameEndedTime;
     private int collectedCoins;
+    private Color c;
+    private String endGameText;
+    private int boardCoins;
 
-    public EndGamePanel(boolean isDead, long gameEndedTime, int collectedCoins) {
+    public EndGamePanel(boolean isDead, long gameEndedTime, int collectedCoins, int boardCoins) {
         super();
         this.chosenMenu = 0;
         this.isDead = isDead;
         this.gameEndedTime = gameEndedTime;
         this.collectedCoins = collectedCoins;
+        this.c = null;
+        this.endGameText = null;
+        this.boardCoins = boardCoins;
+    }
+
+    public int getBoardCoins() {
+        return boardCoins;
+    }
+
+    public boolean isDead() {
+        return isDead;
+    }
+
+    public int getCollectedCoins() {
+        return collectedCoins;
     }
 
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
+        setupScreen(g);
 
-        //g.drawImage(new ImageIcon(getClass().getResource("textures\\pacman_logo_done_yellowgreen.png")).getImage(), 0, 0, null);
+    }
+
+    private void setupScreen(Graphics g) {
         if (isDead) {
+            c = Color.red;
+            endGameText = "YOU DIED";
             g.setFont(new Font("Serif", Font.BOLD, 60));
-            g.setColor(Color.red);
-            g.drawString("YOU DIED", this.getWidth() / 2 - 80, 50);
+            g.setColor(c);
+            g.drawString(endGameText, this.getWidth() / 2 - 80, 50);
         } else {
+            c = Color.green;
+            endGameText = "YOU WON";
             g.setFont(new Font("Serif", Font.BOLD, 60));
-            g.setColor(Color.green);
-            g.drawString("YOU WON", this.getWidth() / 2 - 80, 50);
+            g.setColor(c);
+            g.drawString(endGameText, this.getWidth() / 2 - 80, 50);
         }
 
         g.setFont(new Font("Serif", Font.BOLD, 12));
@@ -74,5 +98,13 @@ public class EndGamePanel extends JPanel {
 
     public int getChosenMenu() {
         return this.chosenMenu;
+    }
+
+    public Color getColor() {
+        return this.c;
+    }
+
+    public String getEndGameText() {
+        return this.endGameText;
     }
 }

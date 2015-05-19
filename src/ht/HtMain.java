@@ -149,7 +149,8 @@ public class HtMain extends JFrame {
         boolean isdead = bgp.isDead();
         long gametime = bgp.gameEndedTime();
         int collected = bgp.getCollectedCoins();
-        egp = new EndGamePanel(isdead, gametime, collected);
+        int boardCoins = bgp.getBoardCoins();
+        egp = new EndGamePanel(isdead, gametime, collected,boardCoins);
         egp.setLayout(new FlowLayout());
         egp.setSize(870, 870);
         egp.setPreferredSize(new Dimension(870, 870));

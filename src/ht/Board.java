@@ -20,8 +20,8 @@ import javax.swing.Timer;
 class Pos {
 
     /**
-     * Ez egy belső osztály, a board belső működéséhez kell, más osztály számára
-     * nem fontos, ezért csak belső osztály, egy pontot reprezentál.
+     * A pos osztály a board belső működéséhez kell, más osztály számára nem
+     * fontos, ezért csak belső osztály, egy pontot reprezentál.
      *
      * @param x a reprezentált pont x tengeleny lévő helye
      * @param y a reprezentált pont y tengelyen lévő helye
@@ -253,8 +253,8 @@ public class Board extends JPanel {
                 blocks.add(new Pos(i * blockWidth, j * blockHeight));
             }
         }
-        
-        blocks.add(new Pos(blockWidth *13, blockWidth * 4));
+
+        blocks.add(new Pos(blockWidth * 13, blockWidth * 4));
 
         //blocks.add();
         /**
@@ -415,8 +415,8 @@ public class Board extends JPanel {
      * @param y
      */
     private void coinCollison() {
-    int x = this.pacman.getPos().x;
-    int y = this.pacman.getPos().y;
+        int x = this.pacman.getPos().x;
+        int y = this.pacman.getPos().y;
         for (Pos p : coins) {
             if (!(checkIsNotCollided(p, new Pos(x + this.blockRad, y + this.blockRad), this.blockRad + 5))) {
                 coins.remove(p);
@@ -495,17 +495,21 @@ public class Board extends JPanel {
             this.gameEnded = true;
         }
     }
-    
-    public long gameEndedTime(){
+
+    public long gameEndedTime() {
         return (System.currentTimeMillis() - this.gameStartTime) / 1000;
     }
 
     public boolean isGameEnded() {
         return this.gameEnded;
     }
-    
-    public int getCollectedCoins(){
+
+    public int getCollectedCoins() {
         return this.collectedCoins;
+    }
+
+    public int getBoardCoins() {
+        return this.boardCoins;
     }
 
 }

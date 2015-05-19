@@ -5,7 +5,6 @@
  */
 package ht;
 
-import java.awt.Color;
 import java.awt.Image;
 import javax.swing.ImageIcon;
 
@@ -22,14 +21,12 @@ public class Ghost implements Movable {
 
     private int x, y;
     private boolean dead;
-    private boolean weak;
     private Direction dir;
     private Image leftImg;
     private Image rightImg;
     private Image upImg;
     private Image downImg;
     private Image currImg;
-    private Image weakImg;
 
     public final int ghost_text_height = 58;
     public final int ghost_text_width = 58;
@@ -39,7 +36,6 @@ public class Ghost implements Movable {
         this.y = y;
         this.dead = false;
         this.dir = Direction.RIGHT;
-        weak = false;
         setupImages(c);
 
     }

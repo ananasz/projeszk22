@@ -21,7 +21,7 @@ public class MenuPanel extends JPanel {
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
-
+        this.setBackground(Color.black);
         g.drawImage(new ImageIcon(getClass().getResource("textures\\pacman_logo_done_yellowgreen.png")).getImage(), 0, 0, null);
 
         g.setFont(new Font("Serif", Font.BOLD, 20));
