@@ -26,8 +26,8 @@ public class HtMain extends JFrame {
 
         @Override
         public void run() {
-            while (!bgp.isGameEnded());
-            setupEndGameFrame();
+                while (!bgp.isGameEnded());
+                setupEndGameFrame();
         }
     };
 
@@ -121,6 +121,7 @@ public class HtMain extends JFrame {
     }
 
     private void setupGamePanel() {
+        new Thread(endGameWatcher).start();
         bgp = new Board();
         this.add(bgp);
         bgp.setFocusable(true);
@@ -128,7 +129,6 @@ public class HtMain extends JFrame {
         bgp.requestFocusInWindow();
         bgp.updateUI();
         this.pack();
-        new Thread(endGameWatcher).start();
     }
 
     private void setupMenuFrame() {
